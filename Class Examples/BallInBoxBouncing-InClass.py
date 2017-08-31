@@ -1,15 +1,14 @@
 from visual import *
 import random
 
-deltat = 0.005
-t = 0
+deltat = 0.005  #Delta Time
+t = 0           #Start Time
 
 #Setup base objects
 xBall = sphere(pos=(-5,0,0), radius=0.5, color=color.white)
 yBall = sphere(pos=(0,-5,0), radius=0.5, color=color.white)
 zBall = sphere(pos=(0,0,5), radius=0.5, color=color.white)
 balls = [xBall, yBall, zBall]
-#ball = sphere(pos=(-5,0,0), radius=0.5, color=color.white)
 
 for ball in balls:
     #ball.trail = curve(color=ball.color)
@@ -29,7 +28,7 @@ for ball in balls:
 
 #Aesthetic objects
 vscale = 0.1
-#varr = arrow(pos=ball.pos, axis=vscale*ball.velocity, color=color.cyan)
+#varr = arrow(pos=xBall.pos, axis=vscale*xBall.velocity, color=color.cyan)
 #ball.trail = curve(color=ball.color)
 
 #Loop and Scene Properties
