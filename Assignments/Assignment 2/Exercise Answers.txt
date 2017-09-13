@@ -22,5 +22,13 @@ d) A geosynchronous satellite needs to stay in as close to the same position at 
 ## Exercise 2.7
 	See file Exercise 2.7.py for program and output.
 ## Exercise 2.8
+	I used two test arrays (a=array[1,2] and b=array[3,4]) to verify array-math behavior before proceeding to parts A, B and C. Adding A+B yields [4,6], so I'm assuming this works on a one-to-one basis (such as A[1] to B[1], or, A[i] to B[i]).
+A) (b/a+1) - Order of operations: b/a then add one.
+	Hand-worked: [2/1+1=3, 4/2+1=3, 6/3+1=3, 8/4+1=3] => [3,3,3,3]
+	Actual: [3,3,3,3]
+B) (b/(a+1) - Order of ops: add one to a then divide b by this.
+	Hand-worked: 2/(1+2) = 1, 4/(2+1) = 4/3, 6/(3+1) = 3/2, 8/(4+1) = 8/5 => [1,4/3,3/2,8/5]
+	Actual: 
+C)
 ## Exercise 2.12
 ## Exercise 2.13
