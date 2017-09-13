@@ -1,0 +1,25 @@
+## Exercise 2.1
+Using the program I wrote, I found the time for a ball to fall 100m and hit the ground was 1.8 seconds.
+
+## Exercise 2.2
+a) We know that r^3 = (Gravity * Mass of the Earth * Time^2)/(4*Pi^2), which represents the distance from the very center of the Earth that a satellite must have. Converting this to subtract the radius of the Earth (R), we can see that orbit height is:
+Orbit Height = (GMT^2/4Pi^2)^(1/3)-R
+
+b) See file: Exercise 2.2.py
+
+c) Altitudes for orbit periods:
+	Once a day: 35870187.704 meters (Which is approximately 35,870.187 km)
+	90 minutes: 281570.195 meters
+	45 minutes: 2700281570.195 meters
+
+d) A geosynchronous satellite needs to stay in as close to the same position at all times. This is what makes it geosynchronous - it's in sync with a geographical location.
+	Earth really takes 23.93 hours to rotate once. While we do call a day 24 hours, we have to make up for it once every four years (Leap Day). If a satellite were to fly at the altitude needed for a 24 hour orbit, it would slowly drift away from its geographically synced location, making it not have a geosynchronous orbit.
+
+	24 hours (86400 seconds):
+	23.93 hours 86148 seconds):
+
+## Exercise 2.6
+## Exercise 2.7
+## Exercise 2.8
+## Exercise 2.12
+## Exercise 2.13
