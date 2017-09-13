@@ -20,6 +20,7 @@ d) A geosynchronous satellite needs to stay in as close to the same position at 
 
 ## Exercise 2.6
 ## Exercise 2.7
+	See file Exercise 2.7.py for program and output.
 ## Exercise 2.8
 ## Exercise 2.12
 ## Exercise 2.13
