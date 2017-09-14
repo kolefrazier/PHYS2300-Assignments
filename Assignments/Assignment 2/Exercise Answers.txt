@@ -49,3 +49,5 @@ C) (1/a)
 	My program finds 1,229 prime numbers less than 10,000.
 
 ## Exercise 2.13
+	Part A: My program finds C100 to be 5.09014835291e+46
+	Part B: My program finds the greatest common divisor of 108 and 192 to be 12.
