@@ -29,11 +29,12 @@ Time = float(input('Enter time (in seconds) for one orbit: '))
 
 #Constants
 Pi = 3.14
-Gravity = 6.67*(10**-11)    #Newton's gravitational constant
-Mass = 5.97*10**24          #Mass of the Earth
-Radius = 6371.0 * 1000.0    #Earth's radius (in KM) converted to meters (km*1000)
+Gravity = 6.67e-11 #*(10**-11)  #Newton's gravitational constant
+Mass = 5.97e24 #*10**24         #Mass of the Earth
+Radius = 6371.0 * 1000.0        #Earth's radius (in KM) converted to meters (km*1000)
 
 #Note: The cube root had to be set as a float to prevent integer math.
 Height = ((Gravity*Mass*(Time**2))/(4*(Pi**2)))**(1.0/3.0) - Radius
 
-print('The altitude is: {0} meters'.format(Height))
+
+print('The altitude is: {0} meters (approx. {1} km)'.format(Height, Height/1000))
