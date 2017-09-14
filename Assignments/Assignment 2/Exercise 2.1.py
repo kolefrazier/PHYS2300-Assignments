@@ -19,39 +19,32 @@
 #--------------------------------------------------------------------------------
 # C o d e H i s t o r y
 #--------------------------------------------------------------------------------
-# Version: 1.0
+# Version: 2.0
 #
 # Author(s): Kole Frazier
 #
 #--------------------------------------------------------------------------------
-
-#Function to calculate height of an object based on time
-def CalculateHeight(time):
-    #Taken from the book on page 28, s=(1/2)gt^2
-    #   This represents how far an object (the ball in this case) falls in the given time.
-    return 9.81*time**2/2
+import math as m
 
 #Get user input for height of tower
+#   In kinematic equations, this will be treated as the total distance, or 'y'.
 Height = float(input("Enter the height (in meters) of the tower: "))
 
-#Time Variables
-Time = 0 #CurrentTime
-TimeStep = 0.1 #Amount to increment time per loop
+#Calculate final velocity based on known information:
+#   y0 = 0, v0 = 0, y = Height
+# v^2 = v0^2 + 2(y-y0) => v = sqrt(v0^2 + 2(y-y0)) = FinalVelocity
+InitialVelocity = 0.0 #Enforce floating point math instead of truncating-int math.
+InitialHeight = 0.0
+GravityAcceleration = 9.8
 
-while(True):
-    #Calculate the height
-    Height -= CalculateHeight(Time)
+FinalVelocity = m.sqrt((InitialVelocity**2)+2*(Height-InitialHeight))
 
-    #Debug printout
-    print('Current height: {0} at {1} seconds.'.format(Height, Time))
+#Now calculate time
+#   From: v=v0+at, we can see that t=(v-v0)/a
+#       Or, Time = (FinalVelocity-InitialVelocity)/GravityAcceleration
+Time = (FinalVelocity-InitialVelocity)/GravityAcceleration
 
-    #Check if height is at or below zero.
-    #   If so, print the results and break.
-    if (Height <= 0):
-        print('The ball hit the ground at {0} seconds.'.format(Time))
-        break
-
-    #Finally, increase time for the next iteration
-    Time += TimeStep
+#Print out the result.
+print('Falling from {0} meters, the ball hits the ground moving at {1} m/s after {2} seconds have passed'.format(Height, FinalVelocity, Time))
 
 
