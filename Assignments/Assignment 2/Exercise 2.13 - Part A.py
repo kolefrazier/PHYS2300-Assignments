@@ -54,7 +54,5 @@ def NextCatalanNumber(n, Cn, goal):
 Cn = 1.0        #Initialize Current as C0, or, 1.
 n = int(input('Which Catalan number do you want?'))
 
-print('C({0}) = {1}'.format(n, NextCatalanNumber(1, Cn, n)))
-#From Exercise 2.7, we know that C(100) is: 3.53334332088e+57
-    
+print('C({0}) = {1}'.format(n, NextCatalanNumber(1, Cn, n)))    
     
