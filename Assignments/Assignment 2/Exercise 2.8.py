@@ -32,7 +32,7 @@ a = array([1,2,3,4],int)
 b = array([2,4,6,8],int)
 
 #Print solution to each section
-print('Part A (b/a+1): ' + (b/a+1))
-print('Part B (b/(a+1)): ' + (b/(a+1)))
-#print('Part C (1/a): ' + (1/a))
+print('Part A (b/a+1): ' + str(b/a+1))
+print('Part B (b/(a+1)): ' + str(b/(a+1)))
+print('Part C (1/a): ' + str(1/a))
 
