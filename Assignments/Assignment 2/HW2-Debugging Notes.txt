@@ -1,0 +1,19 @@
+Fixed Errors
+
+--Syntax Errors--
+	In Function (px,x,v,t,a), the return value is returning "... t**2". Changed to "... t*2"
+	Variable ay has a random period after its assigned value (-9.8.). Removed this random period. (-9.8)
+	The for loop calls function p(), but only px() is defined. Changed p() to px()
+	Renamed variable "vx_0" to be consistent with other variables, "vx0". (vx0 is also called in the for loop)
+
+--Runtime Errors--
+	The y-check in the for loop creates an index out of bounds. 
+		Changed this to be t > 1 rather than y[i] or y[i+1] > 1.
+		(Removed) Changed the check to run very first in the loop, without the "i+1". (so, if y[i] > 0.0...)
+
+
+
+Removed changes
+	Changed the nested for loop to use variable j instead of i (preventing scoping issues)
+		This causes a multi-line output (akin to a bar chart) rather than a chart with a singular line.
+
