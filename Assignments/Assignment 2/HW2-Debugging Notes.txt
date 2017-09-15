@@ -11,6 +11,11 @@ Fixed Errors
 		Changed this to be t > 1 rather than y[i] or y[i+1] > 1.
 		(Removed) Changed the check to run very first in the loop, without the "i+1". (so, if y[i] > 0.0...)
 
+--Logic Errors--
+	The X-axis is labeled as Time but is being filled with px(x0,vx0,t,ax))
+
+
+
 
 
 Removed changes
