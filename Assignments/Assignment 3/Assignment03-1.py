@@ -49,6 +49,7 @@ def IsLeapYear(year):
     return False
 
 LineSkips = 0   #Simple counter for debug purposes
+ReadLines = 0
 
 #Holds temperatures on a per-month basis for easier standard deviation and means
 meanMonthlyTemperatures = [[], [], [], [], [], [], [], [], [], [], [], []] #12 lists, one for each month.
@@ -72,14 +73,16 @@ try:
         #File Meta
         #    [2]    date
         #    [3]    mean temperature
-        #    [17]    max temp reported on that day
-        #    [18]    min temp reported on that day
+        #    [11]    max temp reported on that day
+        #    [12]    min temp reported on that day
         try:
             date = data[2]
             temperature = float(data[3])
+            maxtemp = float(data[11])
+            mintemp = float(data[12])
             
-            if(temperature == 999.9 or date == 999.9):
-                continue;
+            if(temperature == 999.9 or date == 999.9 or maxtemp == 999.9 or mintemp == 999.9): #Ew, that's an ugly if statement.
+                continue
                 
             #parse date into day/month/year
             #convert it to decimal years
@@ -92,6 +95,8 @@ try:
             meanMonthlyTemperatures[int(month)-1].append(temperature) #[month-1] to handle zero-based indexing
             meanTimes.append(decimalYear)
             meanTemperatures.append(temperature)
+            maxTemperatures.append(maxtemp)
+            minTemperatures.append(mintemp)
         
         except Exception as e:
             LineSkips += 1
@@ -99,32 +104,34 @@ try:
         
         #--- For loop end ---
         
-        #Cleanup
-        datafile.close()
+    #Cleanup -- Mind the indentation! Don't want to close the file after the first read!
+    datafile.close()
 except (ValueError, IndexError) as e:
-	print ('[Handled Exception] Value or Index exception encountered: {0}'.format(str(e)))
+    print ('[Handled Exception] Value or Index exception encountered: {0}'.format(str(e)))
 except Exception as e:
-	print ('[Unhandled Exception] Unknown exception encountered: {0}'.format(str(e)))
+    print ('[Unhandled Exception] Unknown exception encountered: {0}'.format(str(e)))
 	
-#Plotting time
-plot.figure()
 
-#Setup and fill in decimal year plot
-plot.subplot(2,1,1)
+#Time to plot!
+#Setup and fill in mean temperature + decimal year plot
+plot.figure()
 plot.title("Temperatures at Ogden, UT")
 plot.plot(meanTimes, meanTemperatures, "bo")
 plot.xlabel("Decimal Year")
 plot.ylabel("Temperature, F")
+plot.savefig("daily.png")
+plot.close()
 
 #Setup and fill in monthly plot
-plot.subplot(2,1,2)
+plot.figure()
+plot.title("Mean Temperatures at Ogden, UT")
+plot.xlabel("Decimal Year")
 plot.ylabel("Temperature, F")
 MonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"]
-monthNumber = np.array(range(0,12,1))
+monthNumber = np.array(range(1,13,1))
 plot.xlim([0.7, 13])
 plot.ylim([0,90])
 width = 0.8
-height = 1.0
 
 #Calculate the per-month temperature standard deviation
 stdMonthTemps = []
@@ -139,6 +146,28 @@ for m in meanMonthlyTemperatures:
 #Set graph data
 plot.bar(monthNumber, MeansPerMonth, yerr=stdMonthTemps, width=width, color="lightgreen", ecolor="black", linewidth=1.5)
 plot.xticks(monthNumber+width/2, MonthNames)
+plot.savefig('mean.png')
+plot.close()
+
+#Setup and fill in max temperature + decimal year plot
+plot.figure()
+plot.title("Maximum Daily Temperatures at Ogden, UT")
+plot.plot(meanTimes, maxTemperatures, "ro")
+plot.xlabel("Decimal Year")
+plot.ylabel("Temperature, F")
+plot.savefig('max.png')
+plot.close()
+
+#Setup and fill in min temperature + decimal year plot
+plot.figure()
+plot.title("Minimum Daily Temperatures at Ogden, UT")
+plot.plot(meanTimes, minTemperatures, "ko")
+plot.xlabel("Decimal Year")
+plot.ylabel("Temperature, F")
+plot.savefig('min.png')
+plot.close()
 
 #Show the plots
-plot.show()
+#plot.show()
+
+print("See exported files for graphs. (daily.png, mean.png, max.png, min.png)")
