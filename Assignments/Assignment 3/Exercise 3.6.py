@@ -1,3 +1,25 @@
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Exercise 3.6 - Feigenbaum Plot
+#
+# Usage: Graph the Feigenbaum plot for a small range of numbers.
+#
+# Description: This program generates a sample of the Feigenbaum plot for a small range.
+#
+# Inputs: None
+#
+# Outputs: Graphical Feigenbaum plot.
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
+
 # Exercise 3.6 - Feigenbaum Plot
 import matplotlib
 import matplotlib.pylab as plot

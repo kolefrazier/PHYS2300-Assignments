@@ -1,3 +1,28 @@
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Exercise 3.2-B
+#
+# Usage: Plot the Galilean Spiral
+#
+# Description: Using hard-coded trigonometry equations, calculate polar then cartesian
+#   coordinates and plot them to visualize the Galilean Spiral.
+#
+# Inputs: None
+#
+# Outputs: Graph of the Galilean Spiral.
+#
+# Auxiliary Files: None
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
+
 from pylab import plot, ylim, xlabel, ylabel, show, legend
 from numpy import linspace, sin, cos, pi
 

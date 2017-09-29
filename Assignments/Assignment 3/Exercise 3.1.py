@@ -1,3 +1,30 @@
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Exercise 3.1
+#
+# Usage: Generate monthly sunspot statistics from provided sample datya.
+#
+# Description: Generates a monthly count and a running average of the number of
+#   sunspots on the sun from a given file with raw information.
+#
+# Inputs: Data file: sunspots.txt
+#
+# Outputs: A graph with per-month information and a running average.
+#
+# Auxiliary Files: sunspots.txt
+#
+# Special Instructions:Auxiliary files must be in the same directory as this script.
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
+
 #Exercise 3.1 - Plotting experimental data
 
 import pylab as plt

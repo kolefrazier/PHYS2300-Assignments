@@ -1,3 +1,27 @@
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Exercise 3.2-A
+#
+# Usage: Plot trigometric curves
+#
+# Description: Plot a simple deltoid curve from hard-coded trigonometry equations.
+#
+# Inputs: None
+#
+# Outputs: Graph of the deltoid curve.
+#
+# Auxiliary Files: None
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
+
 from pylab import plot, ylim, xlabel, ylabel, show, legend
 from numpy import linspace, sin, cos, pi
 

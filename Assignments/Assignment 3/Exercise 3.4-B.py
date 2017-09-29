@@ -1,3 +1,29 @@
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Exercise 3.4-B
+#
+# Usage: Model an FCC Lattice
+#
+# Description: Model an front-centerered cubic (fcc) lattice of a singe cube of atoms
+#    of a naturally occurring chrystal (such as Sodium Chloride)
+#
+# Inputs: None
+#
+# Outputs: None
+#
+# Auxiliary Files: None
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
+
+
 # --- Exercise 3.4-B ---
 from visual import *
 Distance = 5.0
