@@ -28,5 +28,5 @@ from numpy import loadtxt
 FileName = 'stm.txt'
 
 data = loadtxt(FileName, float)
-imshow(data) #Holy one liners, Batman.
+imshow(data) #Holy one liners, Batman. Loads all the read-in data and plots it, in a very clean manner.
 show()

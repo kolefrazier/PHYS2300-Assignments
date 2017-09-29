@@ -19,6 +19,15 @@
 # Author(s): Kole Frazier
 #
 #--------------------------------------------------------------------------------
+# Answers to Exercise Questions
+#--------------------------------------------------------------------------------
+# --A--
+#	A fixed point would look like a simple line over time. On a heat map, the point would be very large as the point repeats over time.
+#	A limit cycle would look more like a small loop - closer to a low-polygon circle or a diamond.
+#	Chaos would look like, well, chaos. Points everywhere, potentially filling the space for a given range.
+#
+# --B--
+# Things start looking more chaotic around r=2000, but get really chaotic around 4=2500.
 
 # Exercise 3.6 - Feigenbaum Plot
 import matplotlib
