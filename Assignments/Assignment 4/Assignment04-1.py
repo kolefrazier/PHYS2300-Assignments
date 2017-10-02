@@ -33,6 +33,10 @@
 #Other is "PASCAL"
 #slope (m) = (a2-a1)/(t2-t1), b=mt1-a1 (a1, t2, etc refers to a-subscript-2)
 #pass in temp, 't'. Find 't' at 't'. return temp-subscript(1) 'a'.
+#Keep in mind UTC to MDT/MST conversions. So either change one into UTC or into MDT.
+#   Something like UTC-Offset.
+#       7:00:00 Mountain Daylight Time
+#       (UTC)13:00:00-(offset)6:00:00 = 7:00:00 (MDT)
 
 import sys
 import matplotlib
