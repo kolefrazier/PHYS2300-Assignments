@@ -44,16 +44,55 @@ import matplotlib.pylab as plot
 import math as m
 import numpy as np
 
+def decimalHour(hours, minutes, seconds):
+    hours = float(hours)
+    minutes = float(minutes)
+    seconds = float(seconds)
+    calculatedDecimalHour = hours + (minutes/60.0) + (seconds/(60.0*60.0))
+    #print('DECIMAL HOUR: {0}:{1}:{2} => {3}'.format(hours, minutes, seconds, calculatedDecimalHour))
+    return calculatedDecimalHour
+
+# wxTimes, wxTemperatures = readWxData(wxFileName)
 def readWxData(wxFileName):
-    print('NOT YET IMPLEMENTED')
+    wxFile = open(wxFileName)
+    wxFileData = wxFile.readlines()
+    wxFile.close()
+    return wxFileData
     
+# gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
 def readGPSData(gpsFileName):
-    print('NOT YET IMPLEMENTED')
+    #Read in all file data
+    gpsFile = open(gpsFileName)
+    gpsFileData = gpsFile.readlines()
+    gpsFile.close()
+    
+    #The first two lines of the bats/RPS data file is header stuff. Start reading in at line 3.
+    LineCount = 2 #0-based: 1,2,3=>0,1,2
+    
+    #Parse the data into two lists for return
+    gpsTimes = []
+    gpsAltitudes = []
+    
+    #Convert time columns into decimal hours & get altitude for each line.
+    #   Hours [1], Min [2], Sec [3]
+    #   Altitude [6]
+    for line in gpsFileData:
+        if(LineCount > 0):
+            print('SKIPPING: ' + line)
+            LineCount -= 1
+            continue
+            
+        data = line.split('\t')
+
+        gpsTimes.append(decimalHour(data[1], data[2], data[3]))
+        gpsAltitudes.append(data[6])
+    
+    return gpsTimes, gpsAltitudes
     
 def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes):
     print('NOT YET IMPLEMENTED')
     
-def plotAllFigs(display):
+def plotAllFigs(display, wxTimes, wxTemperatures):
     plot.figure()
     plot.subplot(2,1,1)
     plot.plot(wxTimes, wxTemperatures,linewidth=2.0)
@@ -96,15 +135,24 @@ def plotAllFigs(display):
         print "Unrecognized output, ", display
     
 try:
-    wxFileName = 'TempAndPressure.txt'
+    wxFileName = 'TempAndPressure.csv'
     gpsFileName = 'gpsData.txt'
+    
+    #read in temperature and time data
+    #wxTimes, wxTemperatures = readWxData(wxFileName)
+    gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
+    print('[RESULT] gpsTimes: {0}\tgpsAltitudes: {1}'.format(str(len(gpsTimes)), str(len(gpsAltitudes))))
+    
     display = 'show' # or save
 except (ValueError, IndexError), e:
     print ('[ERROR] File parsing error: ' + e)
+    sys.exit()
     
-#read in temperature and time data
-wxTimes, wxTemperatures = readWxData(wxFileName)
-gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
+sys.exit()
+    
+# #read in temperature and time data
+# wxTimes, wxTemperatures = readWxData(wxFileName)
+# gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
 
 #compute wx alts by interpolating from gps alts
 wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes)
