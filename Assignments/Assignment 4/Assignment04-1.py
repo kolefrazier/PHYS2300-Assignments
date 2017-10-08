@@ -36,7 +36,9 @@
 #Keep in mind UTC to MDT/MST conversions. So either change one into UTC or into MDT.
 #   Something like UTC-Offset.
 #       7:00:00 Mountain Daylight Time
-#       (UTC)13:00:00-(offset)6:00:00 = 7:00:00 (MDT)
+# 
+#   ----- TODO -----
+#   Change "interpolateWxFromGPS" to return multiple hunks of data (for when it goes up and when it goes down, down, down)
 
 import sys
 import matplotlib
@@ -54,10 +56,30 @@ def decimalHour(hours, minutes, seconds):
 
 # wxTimes, wxTemperatures = readWxData(wxFileName)
 def readWxData(wxFileName):
-    wxFile = open(wxFileName)
-    wxFileData = wxFile.readlines()
+    wxFile = open(wxFileName, 'r')
+
+    wxTimes = []
+    wxTemperatures = []
+
+    index = 0
+    while index < 17:
+        wxFile.readline() # skip the first 17 line
+        index += 1
+        
+    firstLine = 0
+    for line in wxFile:
+        wxData = line.split(",")
+        time = wxData[1].split(":")
+        temperature = float(wxData[3])
+        decimalHours = float(time[0]) + float(time[1])/60.0 + float(time[2])/60.0/60.0
+        if firstLine == 0:
+            decimalHoursRef = decimalHours
+            firstLine = 1
+        wxTimes.append(decimalHours - decimalHoursRef)
+        wxTemperatures.append(temperature)
+    # close data file
     wxFile.close()
-    return wxFileData
+    return wxTimes, wxTemperatures
     
 # gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
 def readGPSData(gpsFileName):
@@ -89,8 +111,34 @@ def readGPSData(gpsFileName):
     
     return gpsTimes, gpsAltitudes
     
-def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes):
-    print('NOT YET IMPLEMENTED')
+def myInterpolator(xLower, yLower, xUpper, yUpper, xInterp):
+    
+    slope = (float(yUpper) - float(yLower))/(float(xUpper) - float(xLower))
+    intercept = float(yLower) - float(slope)*float(xLower)
+    
+    return slope*float(xInterp) + intercept
+    
+def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
+    wxCorrelatedAltitudes = []
+    wxCorrelatedTemperatures = []
+
+    for wxindex in range(len(wxTimes)):
+        for gpsindex in range(len(gpsTimes)-1):
+            if wxTimes[wxindex] > gpsTimes[gpsindex] and wxTimes[wxindex] < gpsTimes[gpsindex+1]:
+                
+                xLower = gpsTimes[gpsindex]
+                yLower = gpsAltitudes[gpsindex]
+                xUpper = gpsTimes[gpsindex+1]
+                yUpper = gpsAltitudes[gpsindex+1]
+                xInterp = wxTimes[wxindex]
+                
+                wxaltitude = myInterpolator(xLower, yLower, xUpper, yUpper, xInterp)
+                wxtemperature = wxTemperatures[wxindex]
+                
+                wxCorrelatedAltitudes.append(wxaltitude)
+                wxCorrelatedTemperatures.append(wxtemperature)
+                
+    return wxCorrelatedAltitudes, wxCorrelatedTemperatures
     
 def plotAllFigs(display, wxTimes, wxTemperatures):
     plot.figure()
@@ -148,14 +196,14 @@ except (ValueError, IndexError), e:
     print ('[ERROR] File parsing error: ' + e)
     sys.exit()
     
-sys.exit()
-    
-# #read in temperature and time data
-# wxTimes, wxTemperatures = readWxData(wxFileName)
-# gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
+#read in temperature and time data
+wxTimes, wxTemperatures = readWxData(wxFileName)
+gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
 
 #compute wx alts by interpolating from gps alts
-wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes)
+wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, 
+wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = \
+interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures)   #SEE TODO AT TOP OF FILE
 
 #Plot and quit
 plotAllFigs(display)
