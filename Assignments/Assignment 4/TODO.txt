@@ -3,5 +3,8 @@ Add headers to ALL files
 4.1 - Finish followup questions (differences between int and float result)
 4.2 - Difference between the two quadratic formulae results
 	Plus part C? No idea what we're supposed to right there?
+	I think it's a "depending on numerical size of values, use "Normal" or "Second" methods?
+4.3 - Work on it!
+4.4 - Work on it!
 
 Finish the Interpolation/Assign04-1 file........ (stupid temperature graphs)
