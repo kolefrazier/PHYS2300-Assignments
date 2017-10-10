@@ -1,0 +1,7 @@
+Add headers to ALL files
+
+4.1 - Finish followup questions (differences between int and float result)
+4.2 - Difference between the two quadratic formulae results
+	Plus part C? No idea what we're supposed to right there?
+
+Finish the Interpolation/Assign04-1 file........ (stupid temperature graphs)
