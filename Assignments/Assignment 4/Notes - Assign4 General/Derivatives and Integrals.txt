@@ -1,0 +1,58 @@
+Fundamental Theorem of Calculus (part 1)
+
+Integral (from a to b) ~= sum of A-sub(k) to N, starting at K=1
+		=> 1/2 * h * sum of [f(a+(k-1)h) + f(a+hk)]
+		
+		=>
+			1/2 * h * [ f(a) + f(a+h)]		// k=1
+		+	f(a+1h) + f(a+2h) 					// k=2
+		+	f(a+2h) + f(a+3h)					// k=3
+		+	f(...) ...
+		=> h [ (1/2) * f(a) + (1/2) * f(b) + sum of f(a + kh) from k=1 to n-1)]	//Trapezoid Rule
+		(This is in the textbook, apparently.)
+		
+		
+--------------------------------------------------------------
+
+def f(x):
+	return x**4 = 2*x + 1 //This function being integrated. would need to adjust for the exercise.
+
+def trapezoid(N, a, b): //(This is an integral method, I believe)
+	h = (b-a)/N
+	s = 0.5*f(a) + 0.5*f(b)
+	for k in range (1, N):
+		s ++ f(a + k*h)
+		
+	return s*hk
+
+N = 10
+a = 0.0
+b = 2.0
+print trapezoid(N, a, b)
+
+--------------------------------------------------------------
+
+Integral ( from a to b) => I (a,b)
+	=> sum of A-sub(k) from N/2 where k=2
+	=> (skipped all the whiteboard work, lol)
+	=> (1/3)*h*[f(a)+f(b) + 4*sum of f(a+kh) on odds + 2*sum of f(a+kh) for evens)] //Simpson's Rule
+	
+--------------------------------------------------------------
+def f(x):
+	return x**4 =2*x+1
+	
+def simpson(N,a,b):
+	h=(b-a)/N
+	s=f(a)+b(fb)
+	
+	for k in range(1, N+1, 2): //Odds
+		s += 4.0*f(a+k*h)
+	for k in range(2, N-1, 2): //Evens
+		s += 2.0*f(a+k*h)
+		
+	return (1.0/3.0)*h*s
+	
+N = 1000 //As N increases, our precision does too.
+a = 0.0
+b = 2.0
+print simpson(N, a, b)
