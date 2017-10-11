@@ -30,6 +30,9 @@ a = 0.0
 b = 2.0
 print trapezoid(N, a, b)
 
+//Trapezoid is good for an estimation. However, the Simpson rule (below) is more precise by a few orders of magnitude.
+//	The differences in time are fairly negligible. However, the Simpson rule does take longer to run.
+
 --------------------------------------------------------------
 
 Integral ( from a to b) => I (a,b)
