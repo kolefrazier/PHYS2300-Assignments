@@ -118,9 +118,20 @@ def myInterpolator(xLower, yLower, xUpper, yUpper, xInterp):
     
     return slope*float(xInterp) + intercept
     
+#wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, 
+#wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown
+    
 def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
-    wxCorrelatedAltitudes = []
-    wxCorrelatedTemperatures = []
+    wxCorrelatedAltitudesUp = []
+    wxCorrelatedAltitudesDown = []
+    
+    wxCorrelatedTemperaturesUp = []
+    wxCorrelatedTemperaturesDown = []
+    
+    LastAltitude = 0.0
+    LastTemperature = 0.0
+    FirstCheck = True
+    AltitudeUp = True
 
     for wxindex in range(len(wxTimes)):
         for gpsindex in range(len(gpsTimes)-1):
@@ -135,12 +146,38 @@ def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
                 wxaltitude = myInterpolator(xLower, yLower, xUpper, yUpper, xInterp)
                 wxtemperature = wxTemperatures[wxindex]
                 
-                wxCorrelatedAltitudes.append(wxaltitude)
-                wxCorrelatedTemperatures.append(wxtemperature)
+                if(FirstCheck):
+                    FirstCheck = False
+                    LastAltitude = wxaltitude
+                    LastTemperature = wxtemperature
+                    print 'First: Alt: {0} Temp: {1}'.format(LastAltitude, LastTemperature)
                 
-    return wxCorrelatedAltitudes, wxCorrelatedTemperatures
+                if(wxaltitude < LastAltitude):
+                    print 'ALT SWAP --> Previous: {0}, Current: {1}'.format(LastAltitude, wxaltitude)
+                    AltitudeUp = False
+                    LastAltitude = wxaltitude
+                    
+                if(AltitudeUp is True):
+                    wxCorrelatedAltitudesUp.append(wxaltitude)
+                    wxCorrelatedTemperaturesUp.append(wxtemperature)
+                else:
+                    wxCorrelatedAltitudesDown.append(wxaltitude)
+                    wxCorrelatedTemperaturesDown.append(wxtemperature)
+                    
+                # if(TemperatureUp is True):
+                #     wxCorrelatedTemperaturesUp.append(wxtemperature)
+                # else:
+                #     wxCorrelatedTemperaturesDown.append(wxtemperature)
+                
+                #wxCorrelatedAltitudes.append(wxaltitude)
+                #wxCorrelatedTemperatures.append(wxtemperature)
+                
+    #return wxCorrelatedAltitudes, wxCorrelatedTemperatures
+    print 'Sizes: AltUp:{0}, AltDown:{1}, TempUp:{2}, TempDown:{3}'.format(len(wxCorrelatedAltitudesUp), len(wxCorrelatedAltitudesDown), len(wxCorrelatedTemperaturesUp), len(wxCorrelatedTemperaturesDown))
+    return wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown
     
-def plotAllFigs(display, wxTimes, wxTemperatures):
+#def plotAllFigs(display, wxTimes, wxTemperatures):
+def plotAllFigs(display):
     plot.figure()
     plot.subplot(2,1,1)
     plot.plot(wxTimes, wxTemperatures,linewidth=2.0)
@@ -163,8 +200,7 @@ def plotAllFigs(display, wxTimes, wxTemperatures):
     plot.figure()
     plot.subplot(1,2,1)
     plot.title("Harbor Ascent")
-    plot.plot(wxCorrelatedTemperaturesUp,
-    wxCorrelatedAltitudesUp,linewidth=2.0)
+    plot.plot(wxCorrelatedTemperaturesUp, wxCorrelatedAltitudesUp,linewidth=2.0)
     plot.ylabel("Altitude, feet")
     plot.xlabel("Temperature, F")
     plot.ylim([0,100000])
@@ -201,9 +237,8 @@ wxTimes, wxTemperatures = readWxData(wxFileName)
 gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
 
 #compute wx alts by interpolating from gps alts
-wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, 
-wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = \
-interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures)   #SEE TODO AT TOP OF FILE
+wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures)   #SEE TODO AT TOP OF FILE
 
 #Plot and quit
+#plotAllFigs(display, wxTimes, wxTemperatures)
 plotAllFigs(display)
