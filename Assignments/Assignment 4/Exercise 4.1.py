@@ -24,6 +24,11 @@
 #
 #--------------------------------------------------------------------------------
 # --- Exercise 4.1 ---
+#
+# ----- EXERCISE ANSWERS -----
+# When increasing the number to a very large number, the program starts hitting the limits of computer precision.
+# More specifically with the floating point interpretation, an input of 200 makes the result larger than what Python can handle
+# in floating point math, so Python returns "infinite"/"inf" in place of an actual value.
 
 #Calculate the factorial using integers numbers.
 def FactorialInt(number):
