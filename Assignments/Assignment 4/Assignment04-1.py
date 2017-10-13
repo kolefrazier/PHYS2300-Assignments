@@ -22,7 +22,7 @@
 #----------------------------------------------------------------------------
 # Version: 1.0
 #
-# Author(s):
+# Author(s): Kole Frazier
 #
 # Modifications:
 #
@@ -35,6 +35,12 @@
 #       changing in longitude and latitude simultaneously with altitude. This takes place over
 #       multiple hours, too. Due to these factors, the weather balloon is not going to 
 #       experience the same weather going up and going down.
+#
+# ----- Other Notes -----
+#    The "Raw" graphs work as expected. 
+#    However, the Ascend and Descend ones are ~half working.
+#    The Ascend graph has the right data, plus some extra that I cannot pinpoint its source.
+#    The Descend graph is only getting ~12 data points to plot. Again, I cannot pinpoint exactly where or why after many hours of trying to debug.
 
 #GPS data file:                 bats_har090803.dat.txt
 #Weather Balloon data file:     hat090803_pascal.csv
@@ -53,7 +59,6 @@ def decimalHour(hours, minutes, seconds, fiftyninecount):
     minutes = float(minutes)
     seconds = float(seconds)
     calculatedDecimalHour = hours + (minutes/60.0) + (seconds/(60.0*60.0))
-    #print('DECIMAL HOUR: {0}:{1}:{2} => {3}'.format(hours, minutes, seconds, calculatedDecimalHour))
     return calculatedDecimalHour
 
 #Read in the Weather Balloon's data (CSV file expected)
@@ -105,7 +110,6 @@ def readGPSData(gpsFileName):
     for line in gpsFileData:
         
         if(LineCount > 0):
-            #print('SKIPPING: ' + line)
             LineCount -= 1
             continue
             
@@ -126,19 +130,22 @@ def readGPSData(gpsFileName):
     return gpsTimes, gpsAltitudes
     
 def myInterpolator(xLower, yLower, xUpper, yUpper, xInterp):
-    
+    #Y = Slope*x + Y-Intercept
     slope = (float(yUpper) - float(yLower))/(float(xUpper) - float(xLower))
     intercept = float(yLower) - float(slope)*float(xLower)
     
-    return slope*float(xInterp) + intercept
+    return slope*float(xInterp) + intercept #y-mx+b
     
 def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
+    #'Up' value lists
     wxCorrelatedAltitudesUp = []
     wxCorrelatedAltitudesDown = []
     
+    #'Down' value lists
     wxCorrelatedTemperaturesUp = []
     wxCorrelatedTemperaturesDown = []
     
+    #Other helper vars
     LastAltitude = 0.0
     FirstCheck = True
     AltitudeUp = True
@@ -146,38 +153,42 @@ def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
     for wxindex in range(len(wxTimes)):
         for gpsindex in range(len(gpsTimes)-1):
             if wxTimes[wxindex] > gpsTimes[gpsindex] and wxTimes[wxindex] < gpsTimes[gpsindex+1]:
-                
+                #Set values to interpolation
                 xLower = gpsTimes[gpsindex]
                 yLower = gpsAltitudes[gpsindex]
                 xUpper = gpsTimes[gpsindex+1]
                 yUpper = gpsAltitudes[gpsindex+1]
                 xInterp = wxTimes[wxindex]
                 
+                #Interpolate data, get current working temperature value.
                 wxaltitude = myInterpolator(xLower, yLower, xUpper, yUpper, xInterp)
                 wxtemperature = wxTemperatures[wxindex]
                 
+                #Set the first check value
                 if(FirstCheck):
                     FirstCheck = False
                     LastAltitude = wxaltitude
-                    #print 'First: Alt: {0} Temp: {1}'.format(LastAltitude, LastTemperature)
                 
+                #Check if the altitude has gone down. This indicates the change from ascent to descent.
                 if(wxaltitude < LastAltitude):
-                    #print 'ALT SWAP --> Previous: {0}, Current: {1}'.format(LastAltitude, wxaltitude)
                     AltitudeUp = False
                     LastAltitude = wxaltitude
                     
+                #AltitudeUp = true means that the balloon is ascending.
+                #AltitudeUp = false means that the balloon is descending.
+                #This indicates which list to append data to - Up or Down versions.
                 if(AltitudeUp is True):
                     wxCorrelatedAltitudesUp.append(wxaltitude)
                     wxCorrelatedTemperaturesUp.append(wxtemperature)
                 else:
                     wxCorrelatedAltitudesDown.append(wxaltitude)
                     wxCorrelatedTemperaturesDown.append(wxtemperature)
-                
+
                 #wxCorrelatedAltitudes.append(wxaltitude)
                 #wxCorrelatedTemperatures.append(wxtemperature)
                 
     #return wxCorrelatedAltitudes, wxCorrelatedTemperatures
-    print 'Sizes: AltUp:{0}, AltDown:{1}, TempUp:{2}, TempDown:{3}'.format(len(wxCorrelatedAltitudesUp), len(wxCorrelatedAltitudesDown), len(wxCorrelatedTemperaturesUp), len(wxCorrelatedTemperaturesDown))
+    print '[DBG] List Sizes: AltUp:{0}, AltDown:{1}, TempUp:{2}, TempDown:{3}'.format(len(wxCorrelatedAltitudesUp), len(wxCorrelatedAltitudesDown), len(wxCorrelatedTemperaturesUp), len(wxCorrelatedTemperaturesDown))
     return wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown
     
 #def plotAllFigs(display, wxTimes, wxTemperatures):
@@ -224,18 +235,19 @@ def plotAllFigs(display):
     else:
         print "Unrecognized output, ", display
     
-#wxFileName = 'hat090803_pascal.csv'
-#gpsFileName = 'bats_har090803.dat.txt'
-wxFileName = 'TempAndPressure.csv'
-gpsFileName = 'gpsData.txt'
-display = 'show' # or save 
+# ----- Global/Main Vars -----
+#File Names
+wxFileName = 'hat090803_pascal.csv'
+gpsFileName = 'bats_har090803.dat.txt'
+# wxFileName = 'TempAndPressure.csv'
+# gpsFileName = 'gpsData.txt'
+
+#Graph display mode
+display = 'show' # or 'save'
       
 #read in temperature and time data
 wxTimes, wxTemperatures = readWxData(wxFileName)
 gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
-
-for n in range(0, 50, 1):
-    print 'Time: {0}, Temp: {1}'.format(str(wxTimes[n]), str(wxTemperatures[n]))
 
 #compute wx alts by interpolating from gps alts
 wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures)
