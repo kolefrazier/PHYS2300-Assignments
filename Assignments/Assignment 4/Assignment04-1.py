@@ -28,17 +28,16 @@
 #
 #----------------------------------------------------------------------------
 # -- Assignment04-1 --
+#
+# ----- ANALYSIS QUESTIONS -----
+# 1. - Switch "display" to "save" and it will save the graphs instead of opening them.
+# 2. The difference between the ascent and descent temperatures is due to the weather balloon
+#       changing in longitude and latitude simultaneously with altitude. This takes place over
+#       multiple hours, too. Due to these factors, the weather balloon is not going to 
+#       experience the same weather going up and going down.
 
-#GPS data file is "BATS"
-#Other is "PASCAL"
-#slope (m) = (a2-a1)/(t2-t1), b=mt1-a1 (a1, t2, etc refers to a-subscript-2)
-#pass in temp, 't'. Find 't' at 't'. return temp-subscript(1) 'a'.
-#Keep in mind UTC to MDT/MST conversions. So either change one into UTC or into MDT.
-#   Something like UTC-Offset.
-#       7:00:00 Mountain Daylight Time
-# 
-#   ----- TODO -----
-#   Change "interpolateWxFromGPS" to return multiple hunks of data (for when it goes up and when it goes down, down, down)
+#GPS data file:                 bats_har090803.dat.txt
+#Weather Balloon data file:     hat090803_pascal.csv
 
 import sys
 import matplotlib
@@ -46,15 +45,18 @@ import matplotlib.pylab as plot
 import math as m
 import numpy as np
 
-def decimalHour(hours, minutes, seconds):
-    hours = float(hours)
+#Calculate a decimal representation of an Hour:Minute:Second timestamp.
+# See note at bottom of readGPSData()'s parsing for-loop.
+#   (Basically, it's a fix for the data file.)
+def decimalHour(hours, minutes, seconds, fiftyninecount): 
+    hours = float(hours) + (fiftyninecount * float(60.0))
     minutes = float(minutes)
     seconds = float(seconds)
     calculatedDecimalHour = hours + (minutes/60.0) + (seconds/(60.0*60.0))
     #print('DECIMAL HOUR: {0}:{1}:{2} => {3}'.format(hours, minutes, seconds, calculatedDecimalHour))
     return calculatedDecimalHour
 
-# wxTimes, wxTemperatures = readWxData(wxFileName)
+#Read in the Weather Balloon's data (CSV file expected)
 def readWxData(wxFileName):
     wxFile = open(wxFileName, 'r')
 
@@ -63,7 +65,7 @@ def readWxData(wxFileName):
 
     index = 0
     while index < 17:
-        wxFile.readline() # skip the first 17 line
+        wxFile.readline() # skip the first 17 lines - they're unnecessary data.
         index += 1
         
     firstLine = 0
@@ -81,7 +83,8 @@ def readWxData(wxFileName):
     wxFile.close()
     return wxTimes, wxTemperatures
     
-# gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
+#Read in the GPS's data file. 
+#   (A '\t' delimited text file.)
 def readGPSData(gpsFileName):
     #Read in all file data
     gpsFile = open(gpsFileName)
@@ -90,6 +93,7 @@ def readGPSData(gpsFileName):
     
     #The first two lines of the bats/RPS data file is header stuff. Start reading in at line 3.
     LineCount = 2 #0-based: 1,2,3=>0,1,2
+    fiftyninecount = 0 #See note at bottom of parsing for-loop.
     
     #Parse the data into two lists for return
     gpsTimes = []
@@ -99,15 +103,25 @@ def readGPSData(gpsFileName):
     #   Hours [1], Min [2], Sec [3]
     #   Altitude [6]
     for line in gpsFileData:
+        
         if(LineCount > 0):
-            print('SKIPPING: ' + line)
+            #print('SKIPPING: ' + line)
             LineCount -= 1
             continue
             
         data = line.split('\t')
 
-        gpsTimes.append(decimalHour(data[1], data[2], data[3]))
+        gpsTimes.append(decimalHour(data[1], data[2], data[3], fiftyninecount)/100.0)
         gpsAltitudes.append(data[6])
+        
+        #Basically, the hours in the data file only have a range of [0, 59].
+        #   However, the data continues as though they were from the same run and not timed segments.
+        #   So, instead of fixing the data file, this "fixes" the issue in the logging system.
+        #   (Issue being hours can go BEYOND 59. Gotta love handling external issues in my homework.)
+        #Mark this last to stop random spikes in the GPS graph.
+        if(data[1] == '59'):
+            print 'hit'
+            fiftyninecount += 1
     
     return gpsTimes, gpsAltitudes
     
@@ -118,9 +132,6 @@ def myInterpolator(xLower, yLower, xUpper, yUpper, xInterp):
     
     return slope*float(xInterp) + intercept
     
-#wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, 
-#wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown
-    
 def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
     wxCorrelatedAltitudesUp = []
     wxCorrelatedAltitudesDown = []
@@ -129,7 +140,6 @@ def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
     wxCorrelatedTemperaturesDown = []
     
     LastAltitude = 0.0
-    LastTemperature = 0.0
     FirstCheck = True
     AltitudeUp = True
 
@@ -149,11 +159,10 @@ def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
                 if(FirstCheck):
                     FirstCheck = False
                     LastAltitude = wxaltitude
-                    LastTemperature = wxtemperature
-                    print 'First: Alt: {0} Temp: {1}'.format(LastAltitude, LastTemperature)
+                    #print 'First: Alt: {0} Temp: {1}'.format(LastAltitude, LastTemperature)
                 
                 if(wxaltitude < LastAltitude):
-                    print 'ALT SWAP --> Previous: {0}, Current: {1}'.format(LastAltitude, wxaltitude)
+                    #print 'ALT SWAP --> Previous: {0}, Current: {1}'.format(LastAltitude, wxaltitude)
                     AltitudeUp = False
                     LastAltitude = wxaltitude
                     
@@ -163,11 +172,6 @@ def interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures):
                 else:
                     wxCorrelatedAltitudesDown.append(wxaltitude)
                     wxCorrelatedTemperaturesDown.append(wxtemperature)
-                    
-                # if(TemperatureUp is True):
-                #     wxCorrelatedTemperaturesUp.append(wxtemperature)
-                # else:
-                #     wxCorrelatedTemperaturesDown.append(wxtemperature)
                 
                 #wxCorrelatedAltitudes.append(wxaltitude)
                 #wxCorrelatedTemperatures.append(wxtemperature)
@@ -218,26 +222,16 @@ def plotAllFigs(display):
     else:
         print "Unrecognized output, ", display
     
-try:
-    wxFileName = 'TempAndPressure.csv'
-    gpsFileName = 'gpsData.txt'
-    
-    #read in temperature and time data
-    #wxTimes, wxTemperatures = readWxData(wxFileName)
-    gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
-    print('[RESULT] gpsTimes: {0}\tgpsAltitudes: {1}'.format(str(len(gpsTimes)), str(len(gpsAltitudes))))
-    
-    display = 'show' # or save
-except (ValueError, IndexError), e:
-    print ('[ERROR] File parsing error: ' + e)
-    sys.exit()
-    
+wxFileName = 'TempAndPressure.csv'
+gpsFileName = 'gpsData.txt'
+display = 'show' # or save 
+      
 #read in temperature and time data
 wxTimes, wxTemperatures = readWxData(wxFileName)
 gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
 
 #compute wx alts by interpolating from gps alts
-wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures)   #SEE TODO AT TOP OF FILE
+wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures)
 
 #Plot and quit
 #plotAllFigs(display, wxTimes, wxTemperatures)
