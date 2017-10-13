@@ -35,6 +35,13 @@
 #       changing in longitude and latitude simultaneously with altitude. This takes place over
 #       multiple hours, too. Due to these factors, the weather balloon is not going to 
 #       experience the same weather going up and going down.
+# 3. Anomalies happen when sensors or measurement tools are unable to properly record data.
+#       The tool may have been positioned oddly or its view/communication system may have been obstructed.
+#       If the tool is relaying information wirelessly, it's possible that there was simply a transmission error
+#       after taking its measurements. In the same frame of thought, it's possible that the recording program
+#       received an error it couldn't handle, so it defaulted to a value and moved on to the next set of values.
+#       These values could be arithmetic issues (eg divide by zero), precision issues for larger numbers, or
+#       even corrupted data from transmission or failing memory.
 #
 # ----- Other Notes -----
 #    The "Raw" graphs work as expected. 
@@ -236,9 +243,11 @@ def plotAllFigs(display):
         print "Unrecognized output, ", display
     
 # ----- Global/Main Vars -----
-#File Names
+#File Names - Standard
 wxFileName = 'hat090803_pascal.csv'
 gpsFileName = 'bats_har090803.dat.txt'
+
+#File Names - Debug Files
 # wxFileName = 'TempAndPressure.csv'
 # gpsFileName = 'gpsData.txt'
 
@@ -255,3 +264,6 @@ wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, 
 #Plot and quit
 #plotAllFigs(display, wxTimes, wxTemperatures)
 plotAllFigs(display)
+
+# display = 'save'
+# plotAllFigs(display)
