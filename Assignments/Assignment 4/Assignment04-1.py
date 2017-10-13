@@ -1,9 +1,9 @@
 #----------------------------------------------------------------------------
 # G e n e r a l I n f o r m a t i o n
 #---------------------------------------------------------------------------
-# Name: harbor.py
+# Name: Assignment04-1
 #
-# Usage: python harbor.py
+# Usage: python Assignment04-1.py
 #
 # Description: Code to correlate and interpolate temperature vs. time with altitude vs. time
 #
