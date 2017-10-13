@@ -120,7 +120,7 @@ def readGPSData(gpsFileName):
         #   (Issue being hours can go BEYOND 59. Gotta love handling external issues in my homework.)
         #Mark this last to stop random spikes in the GPS graph.
         if(data[1] == '59'):
-            print 'hit'
+            #print '59 hours hit'
             fiftyninecount += 1
     
     return gpsTimes, gpsAltitudes
@@ -195,7 +195,8 @@ def plotAllFigs(display):
     plot.xlabel("Mission Elapsed Time, Hours")
     
     if display == "save":
-        plot.savefig("fig2.2.1.png")
+        #plot.savefig("fig2.2.1.png")
+        plot.savefig("raw.png")
     elif display == "show":
         plot.show()
     else:
@@ -216,12 +217,15 @@ def plotAllFigs(display):
     plot.ylim([0,100000])
     
     if display == "save":
-        plot.savefig("fig2.2.2.png")
+        #plot.savefig("fig2.2.2.png")
+        plot.savefig("correlated.png")
     elif display == "show":
         plot.show()
     else:
         print "Unrecognized output, ", display
     
+#wxFileName = 'hat090803_pascal.csv'
+#gpsFileName = 'bats_har090803.dat.txt'
 wxFileName = 'TempAndPressure.csv'
 gpsFileName = 'gpsData.txt'
 display = 'show' # or save 
@@ -229,6 +233,9 @@ display = 'show' # or save
 #read in temperature and time data
 wxTimes, wxTemperatures = readWxData(wxFileName)
 gpsTimes, gpsAltitudes = readGPSData(gpsFileName)
+
+for n in range(0, 50, 1):
+    print 'Time: {0}, Temp: {1}'.format(str(wxTimes[n]), str(wxTemperatures[n]))
 
 #compute wx alts by interpolating from gps alts
 wxCorrelatedAltitudesUp, wxCorrelatedAltitudesDown, wxCorrelatedTemperaturesUp, wxCorrelatedTemperaturesDown = interpolateWxFromGPS(wxTimes, gpsTimes, gpsAltitudes, wxTemperatures)
