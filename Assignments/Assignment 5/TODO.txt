@@ -1,3 +1,7 @@
+Assignment05 (PDF-based assignment):
+	Need to complete
+	Need to add trails to the ball trajectories
+
 Exercise 5.1, page143 (COMPLETE)
 
 Exercises page 147
