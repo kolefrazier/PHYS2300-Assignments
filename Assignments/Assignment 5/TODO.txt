@@ -1,7 +1,11 @@
 (COMPLETE) Exercise 5.1, page143
 
-Exercises 5.2, 5.3, page 147
+Exercises page 147
+	5.2 (COMPLETE)
+	5.3
 
 Exercise 5.6, page 155
 
-Exercises 5.15, 5.16, page 194
+Exercises page 194
+	5.15
+	5.16
