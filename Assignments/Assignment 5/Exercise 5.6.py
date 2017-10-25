@@ -23,7 +23,13 @@
 # Author(s): Kole Frazier
 #
 #--------------------------------------------------------------------------------
-
+#   Exercise Responses
+#--------------------------------------------------------------------------------
+#    The calculated error is a bit off from the integral's result when N=10. 
+#    This is primarily due to the small amount of slices being taken.
+#    The accuracy is not going to be as accurate as it could be due to the small amount of slices being taken.
+#    If we were to increase the number of slices being taken, the error would go down.
+#--------------------------------------------------------------------------------
 
 import math #for math.exp(x), which returns e^x
 
@@ -31,20 +37,21 @@ def f(x):
     return x**4 - 2*x + 1
     
 def ErrorCalculate(one, two):
-    return (1/3)*(two - one)
+    return ((1.0/3.0)*(two - one))
 
-N = 10
 a = 0.0
+b = 2.0
 
 # --- N=10 ---
-b = 2.0
+N = 10
 h = (b-a)/N
 
 s = 0.5*f(a) + 0.5*f(b)
 for k in range(1,N):
     s += f(a+k*h)
+    
 
-nOne = (h*2)
+nOne = (h*s)
 
 # --- N=20 ---
 N = 20
@@ -53,7 +60,9 @@ s = 0.5*f(a) + 0.5*f(b)
 for k in range(1,N):
     s += f(a+k*h)
     
-nTwo = (h*2)
+nTwo = (h*s)
 
 CalculatedError = ErrorCalculate(nOne, nTwo)
+
+print('N=10\t= {0}\nN=20\t= {1}\nCalculated error: {2}\nAbsolute error: {3}'.format(nOne, nTwo, CalculatedError, abs(CalculatedError)))
 
