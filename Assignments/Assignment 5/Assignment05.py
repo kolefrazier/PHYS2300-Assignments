@@ -1,4 +1,29 @@
-#Assignment05
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Assignment05
+#
+# Usage: python "Assignment05.py"
+#
+# Description: Simulat
+#
+# Inputs: Vector information for position and velocity X, Y, Z components.
+#       Run time values (total time, time step).
+#
+# Outputs: Visual animation, some console data about the final result.
+#
+# Auxiliary Files: "flower128.tga", used for background image. Must be in same directory as script.
+#
+# Special Instructions: N/A
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
 from visual import *
 import math as m
 import numpy
@@ -43,7 +68,18 @@ gravitationalAcceleration = -9.8
 
 #Setup visual aspects
 scene = display(title='Projectiles and Air Drag')
-#scene.background(src='clouds.jpeg') #http://vpython.org/contents/docs/materials.html
+
+#Using the "flower128.tga" file from the VPython examples, as it is only a few kb in size.
+#   Whereas, the clouds file I tried using ended up being 12 mb in size (too big...)
+#   I couldn't figure out how to make the scene.background change to an image, so I used a really stretched box
+#   with a custom material. (Note: It is atrociously stretched.)
+cloudsPhoto = materials.texture(data=materials.loadTGA("flower128"), mapping="rectangular")
+#scene.background = cloudsPhoto
+
+bgBox = box(pos=vector(0,0,-25), size=(512,512,0), material=cloudsPhoto)
+floorBox = box(pos=vector(0,0,0), size=(50,1,50), material=materials.wood)
+
+#Setup the objects we are moving around
 ballNoDrag = sphere(pos = (x,y,z), radius=0.5, color=color.green)
 ballNoDrag.velocity = vector(vx, vy, vz)
 ballNoDrag.trail = curve(color=ballNoDrag.color)
@@ -107,5 +143,4 @@ while(t <= timeRun):
     t0 = t
     t += timeStep
 
-print ('Completed!')
-print ('Final positions:\n\tNo air drag: {0}\n\tYes air drag: {1}'.format(str(ballNoDrag.pos), str(ballAirDrag.pos)))
+print ('Completed! Final positions:\n\tNo air drag: {0}\n\tYes air drag: {1}'.format(str(ballNoDrag.pos), str(ballAirDrag.pos)))
