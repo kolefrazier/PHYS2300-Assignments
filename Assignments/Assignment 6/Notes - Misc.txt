@@ -1,0 +1,23 @@
+Pendulum Stuff
+	Sum of the Torques (T) = Moment of Inertia (I) * alpha
+	
+	alpha = (-1)*(Length (L) / I) * (mass*gravity*sin(theta))
+	
+
+"Chaos"
+		When the same input creates non-deterministic (or different) results each time.
+		
+		
+		
+// ---- Pseudo ----
+
+get initial conditions
+
+function: getNewAcc(theta, omega) #omega = "w"
+	#compute alpha
+	#compute omega
+	#compute theta
+	return theta
+	
+function: getXY(theta):
+	#converts theta to x & y coordinates

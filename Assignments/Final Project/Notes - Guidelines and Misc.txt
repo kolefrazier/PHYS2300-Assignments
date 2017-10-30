@@ -1,0 +1,14 @@
+1. Scientific Question
+	Can we use data to show something?
+	Recall the examples given in class: 
+		Is winter (first freeze and first thaw dates) one month longer than it was in 1940?
+		Population Explosion: How many people would you have to move off-world to keep the population from rising?
+	Questions do NOT have to be "able" to do in real life (such as measuring temperature in the center of the sun)
+	We want something that isn't too complex (eg Takes 5 years to run) or too simple (eg Takes 30 seconds to run)
+	
+2. Computational Element
+	We need to compute something.
+	This can be theoretical or data analysis.
+	
+3. Result
+	Display the result in a way that can help you analyze the element or display a definite result.

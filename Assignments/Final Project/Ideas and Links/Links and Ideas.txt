@@ -1,13 +1,18 @@
-liquid heat transfer
+----- liquid heat transfer ------
 
 how different liquids conduct heat over time
 	finding a liquid to cool things quickest
 	does it "peak" at a certain point?
 	how does it change based on volume, liquid type and initial temperatures (heated element and liquid temps)
-	
-	
 
+
+----- Ising Model -----
 https://en.wikipedia.org/wiki/Ising_model	
 java course - the ising model (page 103/124)
 https://mattbierbaum.github.io/ising.js/
 https://github.com/mattbierbaum/ising.js
+
+
+----- Other Ideas -----
+Erosion?
+The water one (the TDSE file?) with water fractals and vortices
