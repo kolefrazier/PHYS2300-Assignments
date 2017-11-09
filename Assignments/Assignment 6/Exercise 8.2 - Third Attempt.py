@@ -18,35 +18,24 @@
 #--------------------------------------------------------------------------------
 # C o d e H i s t o r y
 #--------------------------------------------------------------------------------
-# Version: alpha-3.0
+# Version: 1.0
 #
 # Author(s): Kole Frazier
 #
-#--------------------------------------------------------------------------------
-# Exercise Questions
-#--------------------------------------------------------------------------------
-#   B) Describe in words what is going on in the system.
-#
-#   The Lotka-Volterra equations represent proportional populations over time.
-#   As the population of prey increases, it provides the predators opportunity to feed/prosper and 
-#    increase their population. But as the population of prey decreases, the predators no longer have
-#    the resources to sustain their population and begin to lose population over time. 
-#   This creates a cycle of population cause-and-effect.
-#
-#   If the population data points were graphed as a Prey-Population versus Predator-Population, the resulting
-#    graph becomes a circle instead of a linear result.
 #--------------------------------------------------------------------------------
 
 import matplotlib
 import matplotlib.pyplot as plot
 from numpy import array, arange
+
+def preyReproduction(x, y, t):
+    return (alpha * x) - (beta * x * y)
     
-def f(r, t):
-    x = r[0]
-    y = r[1]
-    fx = alpha*x - beta*x*y
-    fy = gamma*x*y-delta*y
-    return array([fx,fy],float)
+def predatorReproduction(x, y, t):
+    return (gamma*x*y)-(delta*y)
+    
+def f(x, y, t):
+    return h*preyReproduction(x,y,t), h*predatorReproduction(x,y,t)
 
 #Predator and Prey values.
 #  Must be a multiple of 0.001, as each whole int (eg 1.0) represents a thousand of the population.
@@ -57,6 +46,7 @@ y = 3.0 #Predators (foxes)
 timeStart = 0
 timeEnd = 30
 
+#Runge-Kutta Values I *think* are needed?
 N = 1000
 h = abs(y - x)/N
 
@@ -68,9 +58,10 @@ delta = 2.0 #Looks like a lower-case d
 
 xPoints = [] #Prey
 yPoints = [] #Predator
-tPoints = arange(timeStart, timeEnd,h) #, h) #arange(x,y,h) #Time
+tPoints = arange(timeStart, timeEnd) #, h) #arange(x,y,h) #Time
 
 r = array([1.0,1.0], float)
+print(r)
 
 for t in tPoints:
     #Calculate X values then Y values
@@ -78,15 +69,23 @@ for t in tPoints:
     yPoints.append(r[1])
     
     #Runge-Kutta Method    
-    k1 = h*f(r,t)
-    k2 = h*f(r+0.5*k1, t+0.5*h)
-    k3 = h*f(r+0.5*k2, t+0.5*h)
-    k4 = h*f(r+k3, t+h)
-    r += (k1 + 2*k2 + 2*k3 + k4)/6
+    dx1, dy1 = f(x, y, t) #Results are multipled by H inside function f(). //h*f(x, y, t)
+    dx2, dy2 = f(r+0.5*dx1, r+0.5*dy1, t+0.5*h)
+    dx3, dy3 = f(r+0.5*dx2, r+0.5*dy2*h, t+0.5*h)
+    dx4, dy4 = f(r+dx3, r+dy3, t+h)
+    
+    r += (dx1 + 2*dx2 + 2*dx3 + dx4)/6
+    #r[1] += (dy1 + 2*dy2 + 2*dy3 + dy4)/6
+    
+# print '--- DEBUG ---'
+# print 'X Points: {0}'.format(xPoints)
+# print 'Y Points: {0}'.format(yPoints)
+# print 'R Values: {0}'.format(r)
     
 #Plot data
-plot.plot(tPoints, xPoints, 'g', linewidth=2.0)
-plot.plot(tPoints, yPoints, 'r', linewidth=2.0)
+plot.figure()
+plot.plot(tPoints, xPoints) #, 'g', linewidth=2.0)
+plot.plot(tPoints, yPoints) #, 'r', linewidth=2.0)
 plot.xlabel('Time (t)')
 plot.ylabel('Prey (green) & Predator (red) Populations')
 plot.show()
