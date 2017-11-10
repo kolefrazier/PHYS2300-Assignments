@@ -1,3 +1,13 @@
+----- Misc Links and Such -----
+curious.astro.cornell.edu
+www.data.gov/weather
+climate.gov (site loads slowly, but has great data)
+
+----- Climate -> Winter -----
+ Is winter arriving sooner or later? Is it leaving sooner or later?
+	Particularly when compared to previous decades?
+
+
 ----- liquid heat transfer ------
 
 how different liquids conduct heat over time
@@ -16,3 +26,37 @@ https://github.com/mattbierbaum/ising.js
 ----- Other Ideas -----
 Erosion?
 The water one (the TDSE file?) with water fractals and vortices
+
+Other: Why do they use lead shields for xrays? Why not other metals?
+
+----- Water and Reflections and Heat-----
+using waterWorldPseudo.py
+
+Changing to better fit for a final project:
+	Include an atmosphere and land masses
+	Note the changes in albedo (reflectivity scale?) as the surface changes.
+		Ex: Water has albedo=0.3, ice has albedo=0.9
+		
+
+--> http://physics.clarku.edu/sip/projects.html
+--> http://www.palabos.org/software/lattice-boltzmann-method
+
+
+** Particle hopping models
+** Ising Effect (susceptibility, introducing defects)
+	---> http://cmg.soton.ac.uk/research/projects/introducting-defects-into-the-ising-model/
+
+----- Solar Winds -----
+Does solar wind effect orbits?
+	Orbits of moons around planets without a magnetosphere(name? The protective sphere) or atmosphere?
+	What about comets without these planetary protections?
+	
+https://solarscience.msfc.nasa.gov/SolarWind.shtml
+http://curious.astro.cornell.edu/about-us/50-our-solar-system/the-sun/solar-cycle-and-sunspots/178-what-are-some-of-the-effects-of-solar-flares-on-earth-intermediate
+
+
+------ Light Travel -----
+If light were to leave the universe in a curved trajectory, could it ever return to earth, allowing us to see Earth as it were in the past?
+Source Link: http://curious.astro.cornell.edu/about-us/103-the-universe/cosmology-and-the-big-bang/geometry-of-space-time/1061-if-spacetime-is-curved-is-it-possible-for-us-to-look-into-space-and-see-light-from-earth-from-long-ago-intermediate
+
+----- Earthquake (or other severe weather (eg tornado)) Analysis -----
