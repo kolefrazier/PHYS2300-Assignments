@@ -65,7 +65,7 @@ z = 0
 
 #Time
 TStart = 0
-TEnd = 30
+TEnd = 100
 TStep = 0.01
 tPoints = arange(TStart, TEnd, TStep)
 
@@ -80,12 +80,13 @@ barTwo.axis = (L*sin(thetaTwo), -L*cos(thetaTwo),0)
 ballTwo = sphere(pos=(barTwo.axis), color=barTwo.color, radius=RBall)
 
 #Start Plots
+PlotDispaly = gdisplay(title='Velocity vs Time', xtitle='Time (t)', ytitle='Velocity (v)')
 Plot1 = gcurve(color=barOne.color)
 Plot2 = gcurve(color=barTwo.color)
 
 #Start the simulation
 for t in tPoints:
-    rate(60)
+    rate(2000)
 
     #---------- Bar 1 ----------
     #Plot current coordinates
