@@ -9,7 +9,7 @@
 #
 # Inputs: None
 #
-# Outputs: Visual simulation
+# Outputs: Visual simulation and live-generated graph
 #
 # Auxiliary Files: None
 #
@@ -46,8 +46,8 @@ def angularVelocity(a, t): #w=w0+angularAccel*t => w += (a*t)
 g = 9.8         #Gravity
 L = 1.0         #Bar length, meters
 DBar = 0.03     #Bar diameter
-DBall = 0.06    #Ball diameter
-MBallOne = 3.0     #Ball mass
+RBall = 0.12    #Ball radius
+MBallOne = 3.0  #Ball mass
 MBallTwo = 3.0     
 A = .1          #Natural Frequency Coefficient (?? - Just given as a variable in the text)
 f = 2.0/3.0     #Frequency
@@ -65,30 +65,27 @@ z = 0
 
 #Time
 TStart = 0
-TEnd = 10
+TEnd = 30
 TStep = 0.01
 tPoints = arange(TStart, TEnd, TStep)
 
-#Start Plots
-Plot1 = gcurve(color=color.green)
-Plot2 = gcurve(color=color.yellow)
-
 #Setup Shapes
 ceiling = box(pos=(0,0,0), size=(0.4, 0.02, 0.4), color=color.red)
-barOne = cylinder(pos=array([0,0,0]), radius = DBar, color=color.yellow)
+barOne = cylinder(pos=(0,0,0), radius = DBar, color=color.yellow)
 barOne.axis = (L*sin(thetaOne), -L*cos(thetaOne),0)
-#ballOne = sphere(pos=(barOne.pos + vector(L,L,L)), color=color.green, diameter=DBall)
+ballOne = sphere(pos=(barOne.axis), color=barOne.color, radius=RBall)
 
-barTwo = cylinder(pos=array([0,0,0]), radius = DBar, color=color.green)
+barTwo = cylinder(pos=(0,0,0), radius = DBar, color=color.green)
 barTwo.axis = (L*sin(thetaTwo), -L*cos(thetaTwo),0)
+ballTwo = sphere(pos=(barTwo.axis), color=barTwo.color, radius=RBall)
 
+#Start Plots
+Plot1 = gcurve(color=barOne.color)
+Plot2 = gcurve(color=barTwo.color)
+
+#Start the simulation
 for t in tPoints:
     rate(60)
-
-    #Log current coordinates
-    #xPos = L*sin(theta)
-    #yPos = -L*cos(theta)
-    #zPos = 0
 
     #---------- Bar 1 ----------
     #Plot current coordinates
@@ -107,7 +104,7 @@ for t in tPoints:
 
     #Update objects visual position
     barOne.axis = (L*sin(thetaOne), -L*cos(thetaOne),0)
-    #ballOne.pos = barOne.pos + vector(L,L,L)
+    ballOne.pos = barOne.axis
 
     #---------- Bar 2 ----------
     #Plot current coordinates
@@ -126,4 +123,4 @@ for t in tPoints:
 
     #Update objects visual position
     barTwo.axis = (L*sin(thetaTwo), -L*cos(thetaTwo),0)
-    #ballOne.pos = barOne.pos + vector(L,L,L)
+    ballTwo.pos = barTwo.axis
