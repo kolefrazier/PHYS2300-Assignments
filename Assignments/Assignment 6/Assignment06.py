@@ -33,11 +33,18 @@ def momentInertia(m, L): #I
 def angularAcceleration(theta): #alpha
     return -g/L*sin(theta)
 
-def getDampedOn(a, w, c):
-    return a-(c*w)
-
 def angularVelocity(a, t): #w=w0+angularAccel*t => w += (a*t)
     return a*t
+
+def rk4(r, t):
+    #Acceleration
+    newAccel = angularAcceleration(thetaOne)
+    newAccel -= cOne*VelocityOne
+    newAccel += A*sin(f*t)
+    #Velocity
+    newVeloc = r[1]
+    newVeloc += (newAccel * TStep)
+    return array([newAccel, newVeloc], float)
 
 #Simulation constants
 g = 9.8         #Gravity
@@ -76,6 +83,11 @@ PlotDisplay = gdisplay(title='Angular Position vs Velocity', xtitle='Angular Pos
 Plot1 = gcurve(color=barOne.color)
 Plot2 = gcurve(color=barTwo.color)
 
+#[Velocity, Acceleration]
+r1 = array([1.0, VelocityOne], float)
+r2 = array([1.0, 1.0], float)
+h = TStep
+
 #Start the simulation
 for t in tPoints:
     rate(60)
@@ -84,6 +96,15 @@ for t in tPoints:
     #Plot current coordinates
     #Plot1.plot(pos=(t, VelocityOne)) #Velocity versus time
     Plot1.plot(pos=(thetaOne, VelocityOne)) #Angular position versus velocity
+
+##    k1 = h*rk4(r1, t)
+##    k2 = h*rk4(r1+0.5*k1, t+0.5*h)
+##    k3 = h*rk4(r1+0.5*k2, t+0.5*h)
+##    k4 = h*rk4(r1+k3, t+h)
+##    r1 += (k1 + 2*k2 + 2*k3 + k4)/6
+##
+##    #newAccel = r1[0]
+##    VelocityOne = r1[1]
 
     #Calculate new acceleration, apply damping, apply driving term
     newAccel = angularAcceleration(thetaOne)
@@ -95,6 +116,7 @@ for t in tPoints:
     
     #Calculate new Theta
     thetaOne += VelocityOne * TStep
+    #thetaOne += r1[1] * TStep
 
     #Update objects visual position
     barOne.axis = (L*sin(thetaOne), -L*cos(thetaOne),0)
