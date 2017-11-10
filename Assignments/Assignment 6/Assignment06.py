@@ -5,7 +5,7 @@
 #
 # Usage: python "Assignment06.py"
 #
-# Description: Simulates a swinging pendulum.
+# Description: Simulates a set of damped pendulums
 #
 # Inputs: None
 #
@@ -39,29 +39,21 @@ def getDampedOn(a, w, c):
 def angularVelocity(a, t): #w=w0+angularAccel*t => w += (a*t)
     return a*t
 
-#def rk4():
-    
-
 #Simulation constants
 g = 9.8         #Gravity
-L = 1.0         #Bar length, meters
-DBar = 0.03     #Bar diameter
-RBall = 0.12    #Ball radius
-MBallOne = 3.0  #Ball mass
+L = 1.0         #Bar length, meters - used for both pendulums
+DBar = 0.03     #Bar diameter - used for both pendulums
+RBall = 0.12    #Ball radius - used for both pendulums
+MBallOne = 3.0  #Ball masses
 MBallTwo = 3.0     
 A = .1          #Natural Frequency Coefficient (?? - Just given as a variable in the text)
-f = 2.0/3.0     #Frequency
-cOne = 0.3        #Damping Coefficient
+f = 2.0/3.0     #Frequency - used for both pendulums
+cOne = 0.3      #Damping Coefficients
 cTwo = 0.5
-thetaOne = 2.0 * pi / 3.0  #Starting Theta
-thetaTwo = 1.5 * pi / 4.0  
-VelocityOne = momentInertia(MBallOne, L) #Starting Velocity
+thetaOne = 2.0 * pi / 3.0  #Starting Thetas
+thetaTwo = 1.5 * pi / 4.0
+VelocityOne = momentInertia(MBallOne, L) #Starting Velocities
 VelocityTwo = momentInertia(MBallTwo, L)
-
-#Initial Positional Values
-x = 0
-y = 0
-z = 0
 
 #Time
 TStart = 0
@@ -80,17 +72,18 @@ barTwo.axis = (L*sin(thetaTwo), -L*cos(thetaTwo),0)
 ballTwo = sphere(pos=(barTwo.axis), color=barTwo.color, radius=RBall)
 
 #Start Plots
-PlotDispaly = gdisplay(title='Velocity vs Time', xtitle='Time (t)', ytitle='Velocity (v)')
+PlotDisplay = gdisplay(title='Angular Position vs Velocity', xtitle='Angular Position (theta)', ytitle='Velocity (v)')
 Plot1 = gcurve(color=barOne.color)
 Plot2 = gcurve(color=barTwo.color)
 
 #Start the simulation
 for t in tPoints:
-    rate(2000)
+    rate(60)
 
     #---------- Bar 1 ----------
     #Plot current coordinates
-    Plot1.plot(pos=(t, VelocityOne))
+    #Plot1.plot(pos=(t, VelocityOne)) #Velocity versus time
+    Plot1.plot(pos=(thetaOne, VelocityOne)) #Angular position versus velocity
 
     #Calculate new acceleration, apply damping, apply driving term
     newAccel = angularAcceleration(thetaOne)
@@ -109,7 +102,8 @@ for t in tPoints:
 
     #---------- Bar 2 ----------
     #Plot current coordinates
-    Plot2.plot(pos=(t, VelocityTwo))
+    #Plot2.plot(pos=(t, VelocityTwo)) #Velocity versus time
+    Plot2.plot(pos=(thetaTwo, VelocityTwo)) #Angular position versus velocity
 
     #Calculate new acceleration, apply damping, apply driving term
     newAccel = angularAcceleration(thetaTwo)
