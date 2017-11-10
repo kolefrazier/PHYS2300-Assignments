@@ -24,6 +24,7 @@
 #--------------------------------------------------------------------------------
 
 from visual import *
+from visual.graph import *
 from numpy import sin, cos
 
 def momentInertia(m, L): #I
@@ -32,17 +33,11 @@ def momentInertia(m, L): #I
 def angularAcceleration(theta): #alpha
     return -g/L*sin(theta)
 
-def getDampedOn(a, w):
+def getDampedOn(a, w, c):
     return a-(c*w)
 
 def angularVelocity(a, t): #w=w0+angularAccel*t => w += (a*t)
     return a*t
-
-def DThetaDT(theta, t):
-    acceleration = angularAcceleration(theta)
-    dampedVelocity = angularVelocity(w0, a, t) #* c
-    frequency = A*sin(f*t)
-    return accel - dampedVelocity + frequency
 
 #def rk4():
     
@@ -50,14 +45,18 @@ def DThetaDT(theta, t):
 #Simulation constants
 g = 9.8         #Gravity
 L = 1.0         #Bar length, meters
-DBar = 0.05     #Bar diameter
-DBall = 0.5     #Ball diameter
-MBall = 3.0     #Ball mass
+DBar = 0.03     #Bar diameter
+DBall = 0.06    #Ball diameter
+MBallOne = 3.0     #Ball mass
+MBallTwo = 3.0     
 A = .1          #Natural Frequency Coefficient (?? - Just given as a variable in the text)
 f = 2.0/3.0     #Frequency
-c = 1.0         #Damping Coefficient
-theta = 2.0 * pi / 3.0  #Starting Theta
-Velocity = 0.0          #Starting Velocity
+cOne = 0.3        #Damping Coefficient
+cTwo = 0.5
+thetaOne = 2.0 * pi / 3.0  #Starting Theta
+thetaTwo = 1.5 * pi / 4.0  
+VelocityOne = momentInertia(MBallOne, L) #Starting Velocity
+VelocityTwo = momentInertia(MBallTwo, L)
 
 #Initial Positional Values
 x = 0
@@ -66,42 +65,65 @@ z = 0
 
 #Time
 TStart = 0
-TEnd = 50
+TEnd = 10
 TStep = 0.01
-
-xPoints = []
-yPoints = []
-zPoints = []
-vPoints = []
 tPoints = arange(TStart, TEnd, TStep)
 
+#Start Plots
+Plot1 = gcurve(color=color.green)
+Plot2 = gcurve(color=color.yellow)
+
 #Setup Shapes
-bar = cylinder(pos=array([0,0,0]), radius = DBar, color=color.yellow)
-bar.axis = (L*sin(theta), -L*cos(theta),0)
+ceiling = box(pos=(0,0,0), size=(0.4, 0.02, 0.4), color=color.red)
+barOne = cylinder(pos=array([0,0,0]), radius = DBar, color=color.yellow)
+barOne.axis = (L*sin(thetaOne), -L*cos(thetaOne),0)
+#ballOne = sphere(pos=(barOne.pos + vector(L,L,L)), color=color.green, diameter=DBall)
+
+barTwo = cylinder(pos=array([0,0,0]), radius = DBar, color=color.green)
+barTwo.axis = (L*sin(thetaTwo), -L*cos(thetaTwo),0)
 
 for t in tPoints:
     rate(60)
 
     #Log current coordinates
-    xPos = L*sin(theta)
-    yPos = -L*cos(theta)
-    zPos = 0
-    xPoints.append(xPos)
-    yPoints.append(yPos)
-    zPoints.append(zPos)
+    #xPos = L*sin(theta)
+    #yPos = -L*cos(theta)
+    #zPos = 0
 
-    #Calculate new acceleration, apply damping
-    newAccel = angularAcceleration(theta)
-    newAccel -= c*Velocity
+    #---------- Bar 1 ----------
+    #Plot current coordinates
+    Plot1.plot(pos=(t, VelocityOne))
+
+    #Calculate new acceleration, apply damping, apply driving term
+    newAccel = angularAcceleration(thetaOne)
+    newAccel -= cOne*VelocityOne
+    newAccel += A*sin(f*t)
 
     #Calculate velocity
-    Velocity += (newAccel * TStep) #V = V0 + at => v += at
+    VelocityOne += (newAccel * TStep) #V = V0 + at => v += at
     
     #Calculate new Theta
-    theta += Velocity * TStep
+    thetaOne += VelocityOne * TStep
 
-    #Update pendulum visual position
-    bar.axis = (L*sin(theta), -L*cos(theta),0)
+    #Update objects visual position
+    barOne.axis = (L*sin(thetaOne), -L*cos(thetaOne),0)
+    #ballOne.pos = barOne.pos + vector(L,L,L)
 
+    #---------- Bar 2 ----------
+    #Plot current coordinates
+    Plot2.plot(pos=(t, VelocityTwo))
 
+    #Calculate new acceleration, apply damping, apply driving term
+    newAccel = angularAcceleration(thetaTwo)
+    newAccel -= cTwo*VelocityTwo
+    newAccel += A*sin(f*t)
 
+    #Calculate velocity
+    VelocityTwo += (newAccel * TStep) #V = V0 + at => v += at
+    
+    #Calculate new Theta
+    thetaTwo += VelocityTwo * TStep
+
+    #Update objects visual position
+    barTwo.axis = (L*sin(thetaTwo), -L*cos(thetaTwo),0)
+    #ballOne.pos = barOne.pos + vector(L,L,L)
