@@ -1,0 +1,31 @@
+Orbits are more or less created by "kicking" the objects (setting initial velocities) in opposite directions.
+
+AU = astronical unit. This represents the distance between the Sun and Moon.
+AU/day = 1.5x10^11 (I think that was right?)
+
+Shitty visual:
+	(1)			(2)
+  V1: 5 m/s   V2: -5 m/s
+  
+ 
+F and R are vectors in the following.
+	F(1,2) = F(1) + F(2), etc
+	
+	|F(1,2)| = (G*m(1)*m(2))/(|R(1,2)|^2)
+	Which breaks down further into:
+	X = (x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2
+	sqrt(X) = |R(1,2)|
+	
+There will be a wobble to the sun's travels (like a super tight spiral) due to the Earth's gravitational pull on it.
+
+This is due to centering things on the Sun's frame, rather than the center of mass between the Sun and Earth.
+
+To correct this wobble, we need to adjust for center of mass.
+	See the "MX" equation in the assignment file, Page 4.
+	
+	
+Game Plan:
+	1. Design a two planet system.
+	2. Calculate center of mass.
+	3. Add extra planets.
+	4. (To do later) Leap frog integrator.
