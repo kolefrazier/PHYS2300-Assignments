@@ -1,11 +1,13 @@
 1. Describes the problem you are trying to solve.
 
-I want to analyze whether the winter season has been growing or shrinking in length (including but not limited to first freeze, first snow fall to last freeze, last snow fall) for the general Salt Lake City area over the past decade.
+I want to use historical weather data to analyze whether the winter season has been arriving sooner or later, whether it has been leaving sooner or later and whether the overall effects of winter (snowfall, temperatures) have been increasing or decreasing in intensity for the Salt Lake County region over the past decade.
 
 2. A brief description of the method you plan to use.
 
-I plan to use publicly available datasets (from climate.gov or noaaa.gov) to interpret and graph data for analysis.
+I plan to use historical weather datasets from climate.gov or noaaa.gov to interpret and graph data for analysis. I will write a custom Python program to read the custom data set, interpolate and plot data points for analysis.
+
+If sufficient data does not exist for the Salt Lake County region, I will conduct research to find a region with better historical weather records in order to create more precise weather information. Alternately, I may need to extend the time range to multiple decades' worth of information in order to obtain a better data set to analyze. 
 
 3. The scientific results or analysis you expect.
 
-I expect reports about data to be generated to assist in determining trends in temperature and other winter-weather related statistics. 
+I expect to be able to use custom-generated data plots to analyze whether the winter season's length is changing with a trend, or if it is not yet forming a trend of change.
