@@ -4,7 +4,7 @@ I want to use historical weather data to analyze whether the winter season has b
 
 2. A brief description of the method you plan to use.
 
-I plan to use historical weather datasets from climate.gov or noaaa.gov to interpret and graph data for analysis. I will write a custom Python program to read the custom data set, interpolate and plot data points for analysis.
+I plan to use historical weather data sets from climate.gov or noaaa.gov to interpret and graph data for analysis. I will write a custom Python program to read the custom data set, interpolate and plot data points for analysis.
 
 If sufficient data does not exist for the Salt Lake County region, I will conduct research to find a region with better historical weather records in order to create more precise weather information. Alternately, I may need to extend the time range to multiple decades' worth of information in order to obtain a better data set to analyze. 
 
