@@ -1,0 +1,11 @@
+1. Describes the problem you are trying to solve.
+
+I want to analyze whether the winter season has been growing or shrinking in length (including but not limited to first freeze, first snow fall to last freeze, last snow fall) for the general Salt Lake City area over the past decade.
+
+2. A brief description of the method you plan to use.
+
+I plan to use publicly available datasets (from climate.gov or noaaa.gov) to interpret and graph data for analysis.
+
+3. The scientific results or analysis you expect.
+
+I expect reports about data to be generated to assist in determining trends in temperature and other winter-weather related statistics. 

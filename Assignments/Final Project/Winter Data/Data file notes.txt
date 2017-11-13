@@ -1,0 +1,10 @@
+----- Fields for File [[WinterData-YearlySummaries.csv]]  -----
+FZF5 - Last freeze <= 32F/0C of the year
+DSND - Number days with snow depth > 1 inch(25.4mm) for the period.
+SNOW - Snowfall
+TMAX - Maximum temperature
+DSNW - Number days with snow depth > 1 inch.
+TAVG - Average Temperature.
+TMIN - Minimum temperature
+PRCP - Precipitation
+FZF0 - First freeze <= to 32F/0C of the year. 
