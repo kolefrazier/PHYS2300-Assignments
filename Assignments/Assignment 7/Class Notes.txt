@@ -9,7 +9,7 @@ Shitty visual:
   
  
 F and R are vectors in the following.
-	F(1,2) = F(1) + F(2), etc
+	F(1,2) = F(1) - F(2)
 	
 	|F(1,2)| = (G*m(1)*m(2))/(|R(1,2)|^2)
 	Which breaks down further into:
