@@ -29,3 +29,8 @@ Game Plan:
 	2. Calculate center of mass.
 	3. Add extra planets.
 	4. (To do later) Leap frog integrator.
+	
+	
+Scaling
+	So, multiply the 
+	We want the distance to be proportional, but planets have to be scaled to be visible.
