@@ -42,6 +42,9 @@ Mass2 = float(input('Enter Mass 2: '))
 Position2 = vector(float(input('Enter X-Pos 2: ')), float(input('Enter Y-Pos 2: ')), float(input('Enter Z-Pos 2: ')))
 Velocity2 = vector(float(input('Enter X-Velocity 2: ')), float(input('Enter Y-Velocity 2: ')), float(input('Enter Z-Velocity 2: ')))
 
+TimeLength = float(input('Enter total run time: '))
+TimeStep = float(input('Enter time step: '))
+
 Masses = [Mass1, Mass2]
 
 #Constants
@@ -52,7 +55,7 @@ StarRadius = 100
 RadiusScale = 10
 
 #Objects/Bodies
-Object1 = ball(pos=Position1, velocity=
+#Object1 = ball(pos=Position1, velocity=
 objects = []
 
 #Main loop
