@@ -26,6 +26,9 @@ def VDelta(a, t0, t):
 def XDelta (v, t0, t):
     return v * (t - t0)
 
+def TDelta(t0, t):
+    return (t - t0)
+
 def Acceleration(m, R1, R2):
     return (G * m / RAbs(R1, R2)**3) * RDelta(R1, R2)
 
@@ -34,18 +37,27 @@ def VInitial(m1, R1, R2, t, t0):
     v = v
 
 # ---------- User Input ----------
-Mass1 = float(input('Enter Mass 1: '))
-Position1 = vector(float(input('Enter X-Pos 1: ')), float(input('Enter Y-Pos 1: ')), float(input('Enter Z-Pos 1: ')))
-Velocity1 = vector(float(input('Enter X-Velocity 1: ')), float(input('Enter Y-Velocity 1: ')), float(input('Enter Z-Velocity 1: ')))
+##Mass1 = float(input('Enter Mass 1: '))
+##Position1 = vector(float(input('Enter X-Pos 1: ')), float(input('Enter Y-Pos 1: ')), float(input('Enter Z-Pos 1: ')))
+##Velocity1 = vector(float(input('Enter X-Velocity 1: ')), float(input('Enter Y-Velocity 1: ')), float(input('Enter Z-Velocity 1: ')))
+##
+##Mass2 = float(input('Enter Mass 2: '))
+##Position2 = vector(float(input('Enter X-Pos 2: ')), float(input('Enter Y-Pos 2: ')), float(input('Enter Z-Pos 2: ')))
+##Velocity2 = vector(float(input('Enter X-Velocity 2: ')), float(input('Enter Y-Velocity 2: ')), float(input('Enter Z-Velocity 2: ')))
+##
+##TimeLength = float(input('Enter total run time: '))
+##TimeStep = float(input('Enter time step: '))
+Mass1 = 50
+Position1 = vector(0,0,0)
+Velocity1 = vector(0,0,0)
+Mass2 = 15
+Position2 = vector(50,50,0)
+Velocity2 = vector(15,15,0)
+TimeLength = 1000
+TimeStep = 0.25
 
-Mass2 = float(input('Enter Mass 2: '))
-Position2 = vector(float(input('Enter X-Pos 2: ')), float(input('Enter Y-Pos 2: ')), float(input('Enter Z-Pos 2: ')))
-Velocity2 = vector(float(input('Enter X-Velocity 2: ')), float(input('Enter Y-Velocity 2: ')), float(input('Enter Z-Velocity 2: ')))
-
-TimeLength = float(input('Enter total run time: '))
-TimeStep = float(input('Enter time step: '))
-
-Masses = [Mass1, Mass2]
+Masses = [Mass1, Mass2]     #Good practice would be extending the sphere() object to include Masses and Accelerations
+Accelerations = [0.0, 0.0]
 
 #Constants
 G = 1.0
@@ -55,9 +67,42 @@ StarRadius = 100
 RadiusScale = 10
 
 #Objects/Bodies
-#Object1 = ball(pos=Position1, velocity=
-objects = []
+Object1 = sphere(radius=20, pos=Position1, velocity=Velocity1, color=color.yellow, make_trail=True) #, retain=50)
+Object2 = sphere(radius=20, pos=Position2, velocity=Velocity1, color=color.blue, make_trail=True) #, retain=50)
+Objects = [Object1, Object2]
+
+#Other VPython and Main-Loop Stuff
+scene = display(title='N-Body Simulation', visible=True, show_rendertime=True)
+CurrentTime = 0
+PreviousTime = 0
 
 #Main loop
-for o in objects:
-    print(str(o))
+while(CurrentTime <= TimeLength):
+    rate(60)
+    #Get the leap-frog item
+    for i in Objects:
+        #Update scene camera position
+        scene.center = i.pos
+        
+        IndexI = Objects.index(i)
+        iMass = Masses[IndexI]
+        #iAccel = Accelerations.index(i)
+        iAccel = vector(0,0,0)
+
+        #Perform leap-frog
+        for j in Objects:
+            if(i != j):
+                IndexJ = Objects.index(j)
+                jMass = Masses[IndexJ]
+                dist = j.pos - i.pos
+                iAccel = iAccel + G * jMass * dist / mag(dist)**3
+        for i in Objects:
+            i.velocity = i.velocity + iAccel * TDelta(PreviousTime, CurrentTime)
+            i.pos = i.pos + i.velocity * TDelta(PreviousTime, CurrentTime)
+
+    #Update time
+    PreviousTime = CurrentTime
+    CurrentTime += TimeStep
+
+print('--- Finished! ---')
+print('Final times: cur={0} && prev={1}'.format(CurrentTime, PreviousTime))
