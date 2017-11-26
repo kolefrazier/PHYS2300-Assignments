@@ -7,11 +7,14 @@ from visual import *
 #     because there is no way in hell that managing multiple
 #     arrays of associated data is reasonable.
 class Body(sphere):
-    def __init__(self, name='', mass=1.1, radius=10.0, velocity=vector(0,0,0), position=vector(1,1,1)): #acceleration=vector(0,0,0)
+    def __init__(self, name='', mass=1.1, radius=10.0, velocity=vector(0.0, 0.0, 0.0), acceleration=vector(0.0, 0.0, 0.0), position=vector(1.0, 1.0, 1.0), color=color.white):
         self.name = name
         self.mass = mass
-        #self.acceleration = acceleration
-        sphere.__init__(self, radius=radius, pos=position, velocity=velocity)
+        self.acceleration = acceleration
+        sphere.__init__(self, radius=radius, pos=position, velocity=velocity, color=color, make_trail=True, retain=500)
+
+    def PrintDetails(self):
+        print '[{0}]\n\tMass: {1}\n\tAccel: {2}\n\tVeloc: {3}\n\tpos: {4}'.format(self.name, str(self.mass), str(self.acceleration), str(self.velocity), str(self.pos))
 
 # ---------- IO Functions ----------
 def ReadFileData(FileName):
@@ -27,7 +30,7 @@ def InterpretFileData(FileData):
     
     for i in range (0, DataLength, 5): #for (i = 0; i < FileData.length; i += 5)
         #Get Data
-        Name = FileData[i]
+        Name = FileData[i].strip()
         RawPositions = FileData[i+1]
         RawVelocities = FileData[i+2]
         RawUnknownData = FileData[i+3]
@@ -43,7 +46,7 @@ def InterpretFileData(FileData):
         VelocitiesSplit = RawVelocities.split(' ')
         Velocity = vector(float(VelocitiesSplit[0]), float(VelocitiesSplit[1]), float(VelocitiesSplit[2]))
 
-        NewBody = Body(name=Name, mass=float(RawMass), velocity=Velocity, position=Position, color=color.green)
+        NewBody = Body(name=Name, mass=float(RawMass), velocity=Velocity, position=Position, color=BodyColors[Name])
         Bodies.append(NewBody)
 
     return Bodies
@@ -77,7 +80,8 @@ def VInitial(m1, R1, R2, t, t0):
 # ---------- Numerical and Other Constants ----------
 G = 6.67e-11
 RadiusScale = 10
-BodyColors = {'Mercury':color.orange, 'Venus':color.orange, 'Earth':color.blue, 'Mars':color.red, 'Jupiter':color.brown, 'Saturn':color.brown, 'Uranus':color.blue, 'Neptune':color.blue, 'Pluto':color.purple}
+OneAUInKM = 1.496e8 #Thank you, Google!
+BodyColors = {'Sun':color.yellow, 'Mercury':color.orange, 'Venus':color.orange, 'Earth+Moon barycenter':color.blue, 'Mars':color.red, 'Jupiter':color.orange, 'Saturn':color.orange, 'Uranus':color.cyan, 'Neptune':color.cyan, 'Pluto':color.magenta}
 
 # ---------- Script Logic (a dirty Main) ----------
 # ---------- Process File Input ----------
@@ -85,30 +89,35 @@ Bodies = InterpretFileData(ReadFileData('planet_data_full.txt'))
 
 # ---------- Other VPython and Main-Loop Stuff ----------
 scene = display(title='N-Body Simulation', width=600, height=500, visible=True, show_rendertime=True, autoscale=False)
-RunTime = 2e1000
-TimeStep = 1000
+RunTime = 20000
+TimeStep = 10
 
 # ---------- Simulation Loop ----------
 #while(CurrentTime <= RunTime):
-for dt in len(0, RunTime, TimeStep):
+for dt in range(0, RunTime, TimeStep):
     rate(60)
-    #Get the leap-frog item
     for i in Bodies:
-        print(str(i.name))
-        iAccel = vector(0,0,0)
-
-        #Perform leap-frog
+        i.acceleration = vector(0,0,0)
         for j in Bodies:
-            if(i != j):
+            if i != j:
                 dist = j.pos - i.pos
-                iAccel = iAccel + G * j.mass * dist / mag(dist)**3
-                
-    for i in Bodies:
-        i.velocity = i.velocity + iAccel * dt
-        pos = i.pos + i.velocity * dt
+                i.acceleration = i.acceleration + G * j.mass * dist / mag(dist)**3
+        for i in Bodies:
+            i.velocity = i.velocity + i.acceleration * dt
+            i.pos = i.pos + i.velocity * dt
 
-    #Update time
-    CurrentTime += dt
+##for dt in range(0, RunTime, TimeStep):
+##    rate(60)
+##    for i in Bodies:
+##        i.acceleration = vector(0,0,0)
+##        for j in Bodies:
+##            if i != j:
+##                dist = j.pos - i.pos
+##                i.acceleration = i.acceleration + G * j.mass * dist / mag(dist)**3
+##        for i in Bodies:
+##            i.velocity = i.velocity + i.acceleration*dt
+##            i.pos = i.pos + i.velocity * dt
 
 print('--- Finished! ---')
-print('Final times: cur={0} && prev={1}'.format(CurrentTime, PreviousTime))
+
+
