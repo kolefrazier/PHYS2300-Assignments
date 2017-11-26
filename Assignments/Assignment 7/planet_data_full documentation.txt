@@ -1,0 +1,8 @@
+For the data file:
+
+PlanetName
+xPos (AU) yPos (AU) zPos(AU)
+vX (AU/day) vY (AU/Day) vZ(AU/day)
+Unknown
+Mass (kg)
+Watch for those minus signs!
