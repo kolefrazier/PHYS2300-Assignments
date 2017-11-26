@@ -1,23 +1,64 @@
+import sys
 from visual import *
 
-# ---------- Calculation Functions ----------
+# ---------- Body Class ----------
+#Class: Body extends vpython's sphere
+#   Assists in data containment for ease in data management,
+#     because there is no way in hell that managing multiple
+#     arrays of associated data is reasonable.
+class Body(sphere):
+    def __init__(self, name='', mass=1.1, radius=10.0, velocity=vector(0,0,0), position=vector(1,1,1)): #acceleration=vector(0,0,0)
+        self.name = name
+        self.mass = mass
+        #self.acceleration = acceleration
+        sphere.__init__(self, radius=radius, pos=position, velocity=velocity)
 
+# ---------- IO Functions ----------
+def ReadFileData(FileName):
+    FileHandle = open(FileName)
+    FileData = FileHandle.readlines()
+    FileHandle.close()
+
+    return FileData
+
+def InterpretFileData(FileData):
+    DataLength = len(FileData)
+    Bodies = []
+    
+    for i in range (0, DataLength, 5): #for (i = 0; i < FileData.length; i += 5)
+        #Get Data
+        Name = FileData[i]
+        RawPositions = FileData[i+1]
+        RawVelocities = FileData[i+2]
+        RawUnknownData = FileData[i+3]
+        RawMass = FileData[i+4]
+
+        #Process position and velocity data
+        #File Format:
+        #   xPos yPos zPos
+        #   vX vY vZ
+        PositionsSplit = RawPositions.split(' ')
+        Position = vector(float(PositionsSplit[0]), float(PositionsSplit[1]), float(PositionsSplit[2]))
+
+        VelocitiesSplit = RawVelocities.split(' ')
+        Velocity = vector(float(VelocitiesSplit[0]), float(VelocitiesSplit[1]), float(VelocitiesSplit[2]))
+
+        NewBody = Body(name=Name, mass=float(RawMass), velocity=Velocity, position=Position, color=color.green)
+        Bodies.append(NewBody)
+
+    return Bodies
+        
+# ---------- Calculation Functions ----------
 def Force(m1, m2, R1, R2):
     R12 = RDelta(R1, R2)
     return (G*m1*m2)/RAbs(R1, R2)**2 * R12
 
 def RDelta(R1, R2):
-    deltaX = R2.x - R1.x
-    deltaY = R2.y - R1.y
-    deltaZ = R2.z - R1.z
-    returnVector = vector(deltaX, deltaY, deltaZ)
-    return returnVector
+    return R2 - R1
 
 def RAbs(R1, R2):
-    deltaX = R2.x - R1.x
-    deltaY = R2.y - R1.y
-    deltaZ = R2.z - R1.z
-    PreSquareRoot = deltaX**2 + deltaY**2 + deltaZ**2
+    delta = RDelta(R1, R2)
+    PreSquareRoot = delta.x**2 + delta.y**2 + delta.z**2
     return (PreSquareRoot)**(1/2)
 
 def VDelta(a, t0, t):
@@ -26,9 +67,6 @@ def VDelta(a, t0, t):
 def XDelta (v, t0, t):
     return v * (t - t0)
 
-def TDelta(t0, t):
-    return (t - t0)
-
 def Acceleration(m, R1, R2):
     return (G * m / RAbs(R1, R2)**3) * RDelta(R1, R2)
 
@@ -36,73 +74,41 @@ def VInitial(m1, R1, R2, t, t0):
     a = Acceleration(m1, R1, R2)
     v = v
 
-# ---------- User Input ----------
-##Mass1 = float(input('Enter Mass 1: '))
-##Position1 = vector(float(input('Enter X-Pos 1: ')), float(input('Enter Y-Pos 1: ')), float(input('Enter Z-Pos 1: ')))
-##Velocity1 = vector(float(input('Enter X-Velocity 1: ')), float(input('Enter Y-Velocity 1: ')), float(input('Enter Z-Velocity 1: ')))
-##
-##Mass2 = float(input('Enter Mass 2: '))
-##Position2 = vector(float(input('Enter X-Pos 2: ')), float(input('Enter Y-Pos 2: ')), float(input('Enter Z-Pos 2: ')))
-##Velocity2 = vector(float(input('Enter X-Velocity 2: ')), float(input('Enter Y-Velocity 2: ')), float(input('Enter Z-Velocity 2: ')))
-##
-##TimeLength = float(input('Enter total run time: '))
-##TimeStep = float(input('Enter time step: '))
-Mass1 = 50
-Position1 = vector(0,0,0)
-Velocity1 = vector(0,0,0)
-Mass2 = 15
-Position2 = vector(50,50,0)
-Velocity2 = vector(15,15,0)
-TimeLength = 1000
-TimeStep = 0.25
-
-Masses = [Mass1, Mass2]     #Good practice would be extending the sphere() object to include Masses and Accelerations
-Accelerations = [0.0, 0.0]
-
-#Constants
-G = 1.0
-
-PlanetRadius = 6
-StarRadius = 100
+# ---------- Numerical and Other Constants ----------
+G = 6.67e-11
 RadiusScale = 10
+BodyColors = {'Mercury':color.orange, 'Venus':color.orange, 'Earth':color.blue, 'Mars':color.red, 'Jupiter':color.brown, 'Saturn':color.brown, 'Uranus':color.blue, 'Neptune':color.blue, 'Pluto':color.purple}
 
-#Objects/Bodies
-Object1 = sphere(radius=20, pos=Position1, velocity=Velocity1, color=color.yellow, make_trail=True) #, retain=50)
-Object2 = sphere(radius=20, pos=Position2, velocity=Velocity1, color=color.blue, make_trail=True) #, retain=50)
-Objects = [Object1, Object2]
+# ---------- Script Logic (a dirty Main) ----------
+# ---------- Process File Input ----------
+Bodies = InterpretFileData(ReadFileData('planet_data_full.txt'))
 
-#Other VPython and Main-Loop Stuff
-scene = display(title='N-Body Simulation', visible=True, show_rendertime=True)
-CurrentTime = 0
-PreviousTime = 0
+# ---------- Other VPython and Main-Loop Stuff ----------
+scene = display(title='N-Body Simulation', width=600, height=500, visible=True, show_rendertime=True, autoscale=False)
+RunTime = 2e1000
+TimeStep = 1000
 
-#Main loop
-while(CurrentTime <= TimeLength):
+# ---------- Simulation Loop ----------
+#while(CurrentTime <= RunTime):
+for dt in len(0, RunTime, TimeStep):
     rate(60)
     #Get the leap-frog item
-    for i in Objects:
-        #Update scene camera position
-        scene.center = i.pos
-        
-        IndexI = Objects.index(i)
-        iMass = Masses[IndexI]
-        #iAccel = Accelerations.index(i)
+    for i in Bodies:
+        print(str(i.name))
         iAccel = vector(0,0,0)
 
         #Perform leap-frog
-        for j in Objects:
+        for j in Bodies:
             if(i != j):
-                IndexJ = Objects.index(j)
-                jMass = Masses[IndexJ]
                 dist = j.pos - i.pos
-                iAccel = iAccel + G * jMass * dist / mag(dist)**3
-        for i in Objects:
-            i.velocity = i.velocity + iAccel * TDelta(PreviousTime, CurrentTime)
-            i.pos = i.pos + i.velocity * TDelta(PreviousTime, CurrentTime)
+                iAccel = iAccel + G * j.mass * dist / mag(dist)**3
+                
+    for i in Bodies:
+        i.velocity = i.velocity + iAccel * dt
+        pos = i.pos + i.velocity * dt
 
     #Update time
-    PreviousTime = CurrentTime
-    CurrentTime += TimeStep
+    CurrentTime += dt
 
 print('--- Finished! ---')
 print('Final times: cur={0} && prev={1}'.format(CurrentTime, PreviousTime))
