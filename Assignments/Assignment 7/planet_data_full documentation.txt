@@ -6,3 +6,7 @@ vX (AU/day) vY (AU/Day) vZ(AU/day)
 Unknown
 Mass (kg)
 Watch for those minus signs!
+
+
+Pos: pos * AU
+Vel: v * (AU/day)
