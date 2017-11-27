@@ -34,7 +34,7 @@ BodyColors = {'Sun':color.yellow, 'Mercury':color.orange, 'Venus':color.orange, 
 Bodies = [GetSun(), GetEarth()]
 
 # ---------- Other VPython and Main-Loop Stuff ----------
-scene = display(title='2-Body Simulation', width=600, height=500, visible=True, show_rendertime=True, autoscale=False)
+scene = display(title='2-Body Simulation', width=600, height=500, visible=True, autoscale=False)
 RunTime = 3.15e7 * 3
 dt = 6.3e4
 CurrentTime = 0.0
@@ -42,10 +42,10 @@ print('Beginning simulation. You may need to zoom in (middle house button) to se
 
 # ---------- Simulation Loop ----------
 while(CurrentTime <= RunTime):
-    rate(3600)
+    rate(60)
     
     for i in Bodies:
-        i.acceleration = vector(0,0,0)
+        i.acceleration = vector(0.0, 0.0, 0.0)
         for j in Bodies:
             if i != j:
                 dist = j.pos - i.pos
