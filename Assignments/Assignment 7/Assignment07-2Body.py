@@ -1,3 +1,29 @@
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Assignment 7 - 2 Body version
+#
+# Usage: python "Assignment07-2Body.py"
+#
+# Description: Simulates a 2-Body gravity model.
+#
+# Inputs: None
+#
+# Outputs: Visual simulation of bodies.
+#
+# Auxiliary Files: N/A
+#
+# Special Instructions: Instead of parsing 10+ lines of user input, please adjust values in script.
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
+
 import sys
 import numpy as np
 from visual import *
@@ -19,7 +45,9 @@ class Body(sphere):
 
 # ---------- Body Instantiation Functions ----------
 def GetEarth():
-    return Body(name='Earth', radius=10000, mass=5.97e24, velocity=vector(0.0, 3.0e4, 0.0), position=vector(1.5e11, 0.0, 0.0), color=BodyColors['Earth+Moon barycenter'])
+    #return Body(name='Earth', radius=10000, mass=5.97e24, velocity=vector(0.0, 3.0e4, 0.0), position=vector(1.5e11, 0.0, 0.0), color=BodyColors['Earth+Moon barycenter'])
+    return Body(name='Earth', radius=10000, mass=5.97e24, velocity=vector(0.0, 3.5e4, 0.0), position=vector(1.5e11, 0.0, 0.0), color=BodyColors['Earth+Moon barycenter'])
+
 
 def GetSun():
     return Body(name='Sun', radius=10000000, mass=1.99e30, velocity=vector(0.0, 0.0, 0.0), position=vector(0.0, 0.0, 0.0), color=BodyColors['Sun'], trailRetain=5000)
@@ -37,6 +65,8 @@ Bodies = [GetSun(), GetEarth()]
 scene = display(title='2-Body Simulation', width=600, height=500, visible=True, autoscale=False)
 RunTime = 3.15e7 * 3
 dt = 6.3e4
+#dt = 60.3e10
+#dt = 0.1
 CurrentTime = 0.0
 print('Beginning simulation. You may need to zoom in (middle house button) to see the some trails (such as the Sun\'s trail)')
 

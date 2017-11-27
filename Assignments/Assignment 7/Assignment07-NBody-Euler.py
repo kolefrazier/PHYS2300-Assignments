@@ -5,7 +5,7 @@
 #
 # Usage: python "Assignment07-NBody.py"
 #
-# Description: Simulates an N-Body gravity simulation.
+# Description: Simulates an N-Body gravity simulation using the Euler method.
 #
 # Inputs: File input (see Auxiliary Files field)
 #
@@ -151,22 +151,16 @@ print ('NOTE: The sun may be difficult to see without a trail. It\'s there - zoo
 while(CurrentTime <= RunTime):
     rate(3600)
 
-    # --- Leap-Frog Method ---
+    # --- Euler Method ---
     for i in Bodies:
-        i.acceleration = vector(0.0, 0.0, 0.0)
+        i.acceleration = vector(0,0,0)
         for j in Bodies:
             if i != j:
-                distance = j.pos - i.pos
-                i.acceleration += G * j.mass * distance / mag(distance)**3
-    if FirstStep == 0:
+                dist = j.pos - i.pos
+                i.acceleration = i.acceleration + G * j.mass * dist / mag(dist)**3
         for i in Bodies:
-            i.velocity += i.acceleration*dt/2.0
-            i.pos += i.velocity*dt
-        FirstStep = 1
-    else:
-        for i in Bodies:
-            i.velocity += i.acceleration*dt
-            i.pos += i.velocity*dt
+            i.velocity = i.velocity + i.acceleration*dt
+            i.pos = i.pos + i.velocity * dt
      
     CurrentTime += dt
 

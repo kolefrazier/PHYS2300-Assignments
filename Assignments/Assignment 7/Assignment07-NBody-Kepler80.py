@@ -1,3 +1,31 @@
+#--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Assignment07 - N-Body Version for Kepler 80
+#
+# Usage: python "Assignment07-NBody-Kepler80.py"
+#
+# Description: Simulates an N-Body gravity simulation for the exosystem Kepler 80.
+#
+# Inputs: File input (see Auxiliary Files field)
+#
+# Outputs: Visual simulation of N-Body simulation.
+#
+# Auxiliary Files: Kepler80_data.txt
+#
+# Special Instructions: N/A
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.1
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
+# NOTE: I tried to model this one, but I believe I messed up the data conversions, resulting in a bad model.
+#--------------------------------------------------------------------------------
+
 import sys
 from visual import *
 
@@ -86,6 +114,21 @@ BodyColors = {'Sun':color.yellow, 'Mercury':color.orange, 'Venus':color.orange, 
 # ---------- Script Logic (A Dirty Main Method) ----------
 # ---------- Process File Input, Add Other Bodies ----------
 Bodies = InterpretFileData(ReadFileData('Kepler80_data.txt'))
+
+#Convert to center-of-mass coordinates
+CenterOfMass = vector(0,0,0)
+CenterOfVelocity = vector(0,0,0)
+TotalMass = 0.0
+
+for body in Bodies:
+    CenterOfMass += (body.pos * body.mass)
+    CenterOfVelocity += (body.velocity * body.mass)
+    TotalMass += body.mass
+
+CenterOfMass = CenterOfMass / TotalMass
+
+for body in Bodies:
+    body.pos -= CenterOfMass
 
 # ---------- Other VPython and Main-Loop Stuff ----------
 scene = display(title='N-Body Simulation', width=800, height=800, visible=True, autoscale=False)

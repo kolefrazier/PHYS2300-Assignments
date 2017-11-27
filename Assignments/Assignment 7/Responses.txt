@@ -1,0 +1,5 @@
+When increasing Earth's velocity (in the 2-body) to 35 km/s, the orbit becomes more lopsided, with the Sun being off-center.
+
+When the time step is much smaller than necessary, the simulation takes forever to display anything (due to there being extremely small changes).
+
+When the time step is much too large, the simulation breaks. The changes are too drastic, so any movement is linear rather than following a curve. This creates straight lines (one axis of movement or not normal behavior) in the simulation's display.
