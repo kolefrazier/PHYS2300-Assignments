@@ -47,12 +47,10 @@ def InterpretFileData(FileData):
         PositionsSplit = RawPositions.split(' ')
         #Position = vector(float(PositionsSplit[0]), float(PositionsSplit[1]), float(PositionsSplit[2]))
         Position = vector(float(PositionsSplit[0])*AU, float(PositionsSplit[1])*AU, float(PositionsSplit[2])*AU)
-        #Position = vector(0.0, float(PositionsSplit[1]), 0.0)
 
         VelocitiesSplit = RawVelocities.split(' ')
         #Velocity = vector(float(VelocitiesSplit[0]), float(VelocitiesSplit[1]), float(VelocitiesSplit[2]))
         Velocity = vector(float(VelocitiesSplit[0])*AUDay, float(VelocitiesSplit[1])*AUDay, float(VelocitiesSplit[2])*AUDay)
-        #Velocity = vector(0.0, float(VelocitiesSplit[1]), 0.0)
 
         NewBody = Body(name=Name, radius=10000, mass=float(RawMass), velocity=Velocity, position=Position, color=BodyColors[Name])
         Bodies.append(NewBody)
@@ -111,7 +109,7 @@ Bodies.insert(0, GetSun())
 
 # ---------- Other VPython and Main-Loop Stuff ----------
 scene = display(title='N-Body Simulation', width=800, height=800, visible=True, autoscale=False)
-RunTime = 3.15e7 * 10
+RunTime = 2e15 #Some arbitrary run time
 dt = 6.3e4
 CurrentTime = 0.0
 FirstStep = 0
