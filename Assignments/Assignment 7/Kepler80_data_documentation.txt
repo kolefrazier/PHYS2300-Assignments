@@ -1,0 +1,46 @@
+https://exoplanetarchive.ipac.caltech.edu/cgi-bin/DisplayOverview/nph-DisplayOverview?objname=Kepler-80&type=KEPLER_HOST
+http://exoplanets.org/detail/Kepler-80
+
+ata format:
+Planet Name
+xPos (AU) yPos (AU) zPos(AU)
+vX (AU/day) vY (AU/Day) vZ(AU/day)
+Unknown
+Mass (kg)
+
+--- Data ---
+Kepler-80 (Star)
+0 0 0
+0 0 0
+x
+1.444E+30
+
+Kepler-80 b
+0 0.0325 0 (position)
+0 294178194.8397368 0 (velocity)
+x (unknown - leave as 'x')
+4.215114E+25 (jupiter mass converted to earth mass)
+
+Kepler-80 c
+0 0.0395 0
+0 265636937.43023852 0
+x
+4.17714E+25
+
+Kepler-80 d
+0 0.02068 0
+0 280030534.6373576 0
+x
+2.430336E+25
+
+Kepler-80 e
+0 0.027245 0
+0 238183778.84363925 0
+x
+2.316414E+25
+
+Kepler-80 f
+0 0.03586 0
+0 146682794.6365225 0
+x
+1.1563083E+25
