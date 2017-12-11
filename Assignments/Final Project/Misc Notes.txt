@@ -1,0 +1,50 @@
+[[WinterData-SLC-RegionDailyWeather.csv]]
+MDSF - Multiday snowfall total
+SNWD - Snow depth
+SX03 - Maximum soil temperature with unknown cover at 20 cm depth
+TMAX - Maximum Temperature
+SNOW - Snowfall
+TAVG - Average Temperature
+TMIN - Minimum temperature
+SNO02 - Minimum soil temperature withy unknown cover at 10 cm depth
+TSUN - Total sunshine for the period
+
+[[WinterData-YearlySummaries.csv]]
+	Contains information with single values for each year 
+FZF5 - Last freeze <= 32F/0C of the year
+DSND - Number days with snow depth > 1 inch(25.4mm) for the period.
+SNOW - Snowfall
+TMAX - Maximum temperature
+DSNW - Number days with snow depth > 1 inch.
+TAVG - Average Temperature.
+TMIN - Minimum temperature
+PRCP - Precipitation
+FZF0 - First freeze <= to 32F/0C of the year. 
+
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+General thoughts
+	Exclude data that isn't part in a given temperature range (eg < 35F)
+	Plot multiple pieces of data on one chart? (eg first freeze + running average)
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+Globals:
+	file names
+	data containers (might need to use a dictionary w/ empty arrays?)
+	
+
+Functions:
+	read csv file
+	get day of year
+	first freeze
+	graph data(x, y, xLabel, yLabel)
+	
+General flow
+	read in data
+	
+	
+Graphs desired
+	running average of first freeze
+	running average of last freeze
+	running average of snowfall
