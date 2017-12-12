@@ -13,6 +13,7 @@ def ReadDataFile(FileName):
     FileHandle = open(FileName)
     FileData = FileHandle.readlines()
     FileHandle.close()
+    print 'DBG: Finished reading in data for file: ' + FileName
     return FileData
 
 def OrganizeData(FileData):
@@ -95,6 +96,21 @@ def IsLeapYear(year):
 # Plotting Methods
 #--------------------------------------------------------------------------------
 
+def cleanData(x, y):
+    floatx = []
+    floaty = []
+    
+    for i in range(0, len(x)-1):
+        if (x[i] == "" or y[i] == ""):
+            continue
+        floatx.append(float(x[i]))
+        floaty.append(float(y[i]))
+        
+    print 'POST PARSE LENS: ' + str(len(floatx)) + '\t' + str(len(floaty))
+    return floatx, floaty
+        
+    #plot.plot(floatx, floaty)
+
 #--------------------------------------------------------------------------------
 # Global Variables
 #
@@ -107,10 +123,22 @@ def IsLeapYear(year):
 YearStartMonth = 8
 YearStartDay = 1
 
-FileNames = {'Daily':'./Winter Data/WeatherData-SLC-RegionDailyWeather.csv', 'Yearly':'./Winter Data/WinterData-YearlySummaries.csv'}
+FileNames = {'Daily':'WeatherData-SLC-RegionDailyWeather.csv', 'Yearly':'WinterData-YearlySummaries.csv'}
 DataYearly = OrganizeData(ReadDataFile(FileNames['Yearly']))
 DataDaily = OrganizeData(ReadDataFile(FileNames['Daily']))
 
-print DataDaily[
+print 'DBG: len[date]= {0}\tlen[tavg]={1}'.format(len(DataYearly['DATE']), len(DataYearly['TAVG']))
+
+#plotScatter(DataYearly['DATE'], DataYearly['TAVG'])
+cleanedX, cleanedY = cleanData(DataYearly['DATE'], DataYearly['TAVG'])
+plot.plot(cleanedX, cleanedY)
+# print 'Types of first: X:' + str(type(cleanedX[0])) + ' && Y:' + str(type(cleanedY[0]))
+# print '---DATE---'
+# for i in cleanedX:
+#     print str(i) + ', '
+#     
+# print '---TAVG---'
+# for i in cleanedY:
+#     print str(i) + ', '
 
 
