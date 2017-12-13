@@ -65,6 +65,16 @@ def CleanDataFloat(x, y):
         
     return floatx, floaty
 
+
+def GetYearsFromDates(dates, splitChar='-'):
+    years = []
+    for date in dates:
+        spliteDate = date.split(splitChar)
+        years.append(spliteDate[0])
+
+    return years
+    
+
 #--------------------------------------------------------------------------------
 # Helper Methods
 #--------------------------------------------------------------------------------
@@ -113,8 +123,8 @@ def FilterUnderEqualToValue(keys, data, value):
     #Iterate over values. If it meets the condition, log its key and its data.
     for index, item in enumerate(data):
         if(item <= value):
-            filteredKeys.append(keys[index])
-            filteredData.append(item)
+            FilteredKeys.append(keys[index])
+            FilteredData.append(item)
 
     return FilteredKeys, FilteredData
 
@@ -266,16 +276,17 @@ PlotTrendLineOnly(YearSnow, AverageSnow, 'b', 'Snow', labelLocation='upper right
 PlotTrendLineOnly(YearPrecipitation, AveragePrecipitation, 'g', 'Precipitation', labelLocation='upper right')
 plot.savefig('SnowVsPrecipitation.png', bbox_inches='tight')
 
-# ----- Days Where Minimum Temp <= 32 Degegrees F. Per Year ----
-cleanedX, cleanedY = CleanDataFloat(DataDaily['DATE'], DataDaily['TMIN'])
-filteredX, filteredY = FilterUnderEqualToValue(filteredX, filteredY, 32)
-YearThirtyTwo, AverageThirtyTwo = CountForKey(filteredX, filteredY)
+# ----- Days Where Max Temp <= 32 Degegrees F. Per Year (All Locations) ----
+ExtractedYears = GetYearsFromDates(DataDaily['DATE'])
+cleanedX, cleanedY = CleanDataFloat(ExtractedYears, DataDaily['TMAX'])
+filteredX, filteredY = FilterUnderEqualToValue(cleanedX, cleanedY, 32)
+YearCount, DayCount = CountForKey(filteredX, filteredY)
 print(GraphCounter()),
 plot.figure()
-plot.title('Days with Minimum Temperature <= 32 Degrees F.')
+plot.title('Days with Maximum Temperature <= 32 Degrees F.\n(All Locations)')
 plot.xlabel('Year')
 plot.ylabel('Number of Days')
-PlotWithTrendLine()
+PlotWithTrendLine(YearCount, DayCount)
 plot.savefig('DaysUnder32.png')
 
 #  ----- Final Messages ----- 
