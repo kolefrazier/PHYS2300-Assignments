@@ -191,7 +191,7 @@ print('Completed reading in data sets.')
 #--------------------------------------------------------------------------------
 print('Working on plot: '), #Leave trailing comma, keeps next print() on the same line.
 
-#Average Temperature per Year
+# ----- Average Temperature per Year ----- 
 print('1 '),
 cleanedX, cleanedY = CleanDataFloat(DataYearly['DATE'], DataYearly['TAVG'])
 YearTemperatureAverage, AverageTemperature = AverageDataByKey(cleanedX, cleanedY)
@@ -203,7 +203,7 @@ plot.ylabel('Average Temperature')
 PlotWithTrendLine(YearTemperatureAverage, AverageTemperature)
 plot.savefig('AverageTemperature.png')
 
-#Average Snowfall per Year
+# ----- Average Snowfall per Year ----- 
 print('2 '),
 cleanedX, cleanedY = CleanDataFloat(DataYearly['DATE'], DataYearly['SNOW'])
 YearSnow, AverageSnow = AverageDataByKey(cleanedX, cleanedY)
@@ -216,7 +216,7 @@ plot.ylabel('Average Snowfall')
 PlotWithTrendLine(YearSnow, AverageSnow)
 plot.savefig('AverageSnow.png')
 
-#Average Snowfall per Year vs. Average Precipitation per Year
+# ----- Average Snowfall per Year vs. Average Precipitation per Year ----- 
 print('3 '),
 #Snow averages were already calculated. So only Precipitation is needed.
 cleanedX, cleanedY = CleanDataFloat(DataYearly['DATE'], DataYearly['PRCP'])
@@ -230,7 +230,7 @@ PlotWithTrendLine(YearPrecipitation, AveragePrecipitation, labelLocation='upper 
 plot.tight_layout() #Prevent overlapping
 plot.savefig('AveragePrecipitation.png')
 
-#Average Snowfall per Year vs. Average Precipitation per Year
+# ----- Average Snowfall per Year vs. Average Precipitation per Year ----- 
 print('4 ')
 plot.figure()
 plot.title('Average Snowfall vs. Average Precipitation')
@@ -240,5 +240,6 @@ PlotTrendLineOnly(YearSnow, AverageSnow, 'b', 'Snow', labelLocation='upper right
 PlotTrendLineOnly(YearPrecipitation, AveragePrecipitation, 'g', 'Precipitation', labelLocation='upper right')
 plot.savefig('SnowVsPrecipitation.png', bbox_inches='tight')
 
+#  ----- Final Messages ----- 
 print('Done!\n')
 print('Finished plotting and exporting all graphs.\n')
