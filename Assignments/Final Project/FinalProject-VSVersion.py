@@ -69,49 +69,16 @@ def CleanDataFloat(x, y):
 # Helper Methods
 #--------------------------------------------------------------------------------
 
-def GetDecimalYear(year, month, day):
-    DaysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    
-    DaysInYear = 365.0 #Set as variable to allow for Leap Year adjustments.
-    MonthCounter = 1
-    TotalDays = 0.0
-    while(MonthCounter < int(month)):
-        TotalDays += DaysInMonths[MonthCounter]
-        MonthCounter += 1
-    
-    TotalDays += int(day)
-    LeapYear = IsLeapYear(year)
-    if(LeapYear and (month > 2 or (month == 2 and day == 29))):
-        DaysInYear += 1
-        TotalDays += 1
-    
-    #Return decimal of part year plus given full year
-    #This way we're getting more than a random decimal value.
-    #   Such as "1973.236" instead of just "0.236".
-    return (TotalDays/DaysInYear + year)
-
-def IsLeapYear(year):
-    #Leap Year Rules:
-    #   Year IS divisible by 4
-    #   Year IS NOT a multiple of 100 (EXCEPT multiples of year 400)
-    FourYearCheck = year % 4
-    if(FourYearCheck == 0):
-        HundredYearCheck = year % 100
-        FourHundredYearCheck = year % 400
-        if(HundredYearCheck != 0 or FourHundredYearCheck == 0):
-            return True
-    
-    #All else, it's not a leap year.
-    return False
-
-#--------------------------------------------------------------------------------
-# Plotting and Data Methods
-#--------------------------------------------------------------------------------
+#Simple function to print each graph's number as they are parsed in the script.
+def GraphCounter():
+    global GraphCount
+    GraphCount += 1
+    return str(GraphCount) + ' '
 
 #Averages a list of data for each unique key in a list of keys
 #   Example usage: A list of years (repeating keys, shuffled) with temperatures for each year entry
 def AverageDataByKey(keys, data):
-    #Helper Vars
+    #Setup lists that will be returned
     HandledKeys = []
     AverageForKey = []
 
@@ -119,18 +86,61 @@ def AverageDataByKey(keys, data):
         if(keys[i] in HandledKeys):
             continue
         else:
+            #Add the key to the handled list so that it cannot be reparsed.
             HandledKeys.append(keys[i])
-            indexes = [a for a, x in enumerate(keys) if x == keys[i]] #List comprehension to find all indexes of the given key
-            #print ('DBG: Key: {0} with len(indexes): {1}'.format(str(keys[i]), str(len(indexes))))
+
+            #List comprehension to find all indexes of the given key
+            indexes = [a for a, x in enumerate(keys) if x == keys[i]] 
             
+            #Setup some values to aid
             Counter = len(indexes)
             Sum = 0
+
+            #Parse values, take average
             for index in indexes:
                 Sum += data[index]
 
             AverageForKey.append(float(Sum)/float(Counter))
 
     return HandledKeys, AverageForKey
+
+#Filters out (key, data) pairs based on whether the data value is at or under value.
+def FilterUnderEqualToValue(keys, data, value):
+    #Setup lists that will be returned
+    FilteredKeys = []
+    FilteredData = []
+
+    #Iterate over values. If it meets the condition, log its key and its data.
+    for index, item in enumerate(data):
+        if(item <= value):
+            filteredKeys.append(keys[index])
+            filteredData.append(item)
+
+    return FilteredKeys, FilteredData
+
+#Counts the number of values associated with each key.
+#   Useful for "Total per X" situations.
+def CountForKey(keys, data):
+    #Setup lists that will be returned
+    HandledKeys = []
+    CountForKey = []
+
+    #Iterative over keys. 
+    #   If key has been handled, skip it.
+    #   Else finds it matching values, count how many were found, log it.
+    for index, key in enumerate(keys):
+        if(key in HandledKeys):
+            continue
+        else:
+            HandledKeys.append(key)
+            indexes = [a for a, x in enumerate(keys) if x == key]
+            CountForKey.append(len(indexes))
+
+    return HandledKeys, CountForKey
+
+#--------------------------------------------------------------------------------
+# Plotting and Data Methods
+#--------------------------------------------------------------------------------
 
 #Plot some data and include a trend line in one easy to use method!
 def PlotWithTrendLine(x, y, color='b', label='', labelLocation='upper left'):
@@ -156,7 +166,6 @@ def PlotTrendLineOnly(x, y, color='b', label='', labelLocation='upper left'):
     TrendDesign = color + '-'
 
     #Generate trend line data
-    #Credit for this method: http://widu.tumblr.com/post/43624347354/matplotlib-trendline
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
     
@@ -179,20 +188,23 @@ def PlotTrendLineOnly(x, y, color='b', label='', labelLocation='upper left'):
 #--------------------------------------------------------------------------------
 YearStartMonth = 8
 YearStartDay = 1
+GraphCount = 0
 
+print('Starting data file import and parsing. These may take a moment to process!\n\t1) Yearly Data ... '),
 FileNames = {'Daily':'WeatherData-SLC-RegionDailyWeather.csv', 'Yearly':'WinterData-YearlySummaries.csv'}
 DataYearly = OrganizeData(ReadDataFile(FileNames['Yearly']))
-#DataDaily = OrganizeData(ReadDataFile(FileNames['Daily']))
-print('Completed reading in data sets.')
+print('Finished!\n\t2) Daily Data ... '),
+DataDaily = OrganizeData(ReadDataFile(FileNames['Daily']))
+print('Finished!\nCompleted reading and organizing data sets.')
 
 #--------------------------------------------------------------------------------
 # Data Prep and Plotting
 #   Figures are exported as individual plots, as PyPlot squishes the plots a bit too much for my taste.
 #--------------------------------------------------------------------------------
-print('Working on plot: '), #Leave trailing comma, keeps next print() on the same line.
+print('Parsing and generating plot: '), #Leave trailing comma, keeps the next print() on the same line.
 
 # ----- Average Temperature per Year ----- 
-print('1 '),
+print(GraphCounter()),
 cleanedX, cleanedY = CleanDataFloat(DataYearly['DATE'], DataYearly['TAVG'])
 YearTemperatureAverage, AverageTemperature = AverageDataByKey(cleanedX, cleanedY)
 
@@ -204,11 +216,10 @@ PlotWithTrendLine(YearTemperatureAverage, AverageTemperature)
 plot.savefig('AverageTemperature.png')
 
 # ----- Average Snowfall per Year ----- 
-print('2 '),
+print(GraphCounter()),
 cleanedX, cleanedY = CleanDataFloat(DataYearly['DATE'], DataYearly['SNOW'])
 YearSnow, AverageSnow = AverageDataByKey(cleanedX, cleanedY)
 
-#plot.figure()
 plot.figure()
 plot.title('Average Snowfall by Year for Salt Lake Area')
 plot.xlabel('Year')
@@ -217,7 +228,7 @@ PlotWithTrendLine(YearSnow, AverageSnow)
 plot.savefig('AverageSnow.png')
 
 # ----- Average Snowfall per Year vs. Average Precipitation per Year ----- 
-print('3 '),
+print(GraphCounter()),
 #Snow averages were already calculated. So only Precipitation is needed.
 cleanedX, cleanedY = CleanDataFloat(DataYearly['DATE'], DataYearly['PRCP'])
 YearPrecipitation, AveragePrecipitation = AverageDataByKey(cleanedX, cleanedY)
@@ -230,8 +241,23 @@ PlotWithTrendLine(YearPrecipitation, AveragePrecipitation, labelLocation='upper 
 plot.tight_layout() #Prevent overlapping
 plot.savefig('AveragePrecipitation.png')
 
+# ----- Average First <32 Degrees Day ----- 
+print(GraphCounter()),
+#Snow averages were already calculated. So only Precipitation is needed.
+cleanedX, cleanedY = CleanDataFloat(DataYearly['DATE'], DataYearly['FZF0'])
+YearFreeze, AverageFreeze = AverageDataByKey(cleanedX, cleanedY)
+
+plot.figure()
+plot.title('Average First <32F Day of Season')
+plot.xlabel('Year')
+plot.ylabel('Average Number of Days Since Season Start (August 1)')
+PlotWithTrendLine(YearPrecipitation, AveragePrecipitation, labelLocation='upper right')
+plot.tight_layout() #Prevent overlapping
+plot.savefig('AverageFreeze.png')
+
 # ----- Average Snowfall per Year vs. Average Precipitation per Year ----- 
-print('4 ')
+#No parsing for this one, only regraphing existing data.
+print(GraphCounter()),
 plot.figure()
 plot.title('Average Snowfall vs. Average Precipitation')
 plot.xlabel('Year')
@@ -240,6 +266,17 @@ PlotTrendLineOnly(YearSnow, AverageSnow, 'b', 'Snow', labelLocation='upper right
 PlotTrendLineOnly(YearPrecipitation, AveragePrecipitation, 'g', 'Precipitation', labelLocation='upper right')
 plot.savefig('SnowVsPrecipitation.png', bbox_inches='tight')
 
+# ----- Days Where Minimum Temp <= 32 Degegrees F. Per Year ----
+cleanedX, cleanedY = CleanDataFloat(DataDaily['DATE'], DataDaily['TMIN'])
+filteredX, filteredY = FilterUnderEqualToValue(filteredX, filteredY, 32)
+YearThirtyTwo, AverageThirtyTwo = CountForKey(filteredX, filteredY)
+print(GraphCounter()),
+plot.figure()
+plot.title('Days with Minimum Temperature <= 32 Degrees F.')
+plot.xlabel('Year')
+plot.ylabel('Number of Days')
+PlotWithTrendLine()
+plot.savefig('DaysUnder32.png')
+
 #  ----- Final Messages ----- 
-print('Done!\n')
-print('Finished plotting and exporting all graphs.\n')
+print('Done!\nFinished plotting and exporting all graphs.\n')
