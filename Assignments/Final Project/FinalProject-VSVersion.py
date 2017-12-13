@@ -128,6 +128,17 @@ def FilterUnderEqualToValue(keys, data, value):
 
     return FilteredKeys, FilteredData
 
+def FilterDataForKeyValue(Keys, Data1, Data2, Target):
+	FilteredData1 = []
+	FilteredData2 = []
+
+	for index, item in enumerate(Keys):
+		if(item == Target):
+			FilteredData1.append(Data1[index])
+			FilteredData2.append(Data2[index])
+
+	return FilteredData1, FilteredData2
+
 #Counts the number of values associated with each key.
 #   Useful for "Total per X" situations.
 def CountForKey(keys, data):
@@ -210,6 +221,9 @@ print('Finished!\nCompleted reading and organizing data sets.')
 #--------------------------------------------------------------------------------
 # Data Prep and Plotting
 #   Figures are exported as individual plots, as PyPlot squishes the plots a bit too much for my taste.
+#	
+#	I left the plotting flushed out on a per-plot basis. For a long-term project, this should be
+#		cleaned up with helper plot funtions to reduce repeated plot setup and calls.
 #--------------------------------------------------------------------------------
 print('Parsing and generating plot: '), #Leave trailing comma, keeps the next print() on the same line.
 
@@ -276,6 +290,21 @@ PlotTrendLineOnly(YearSnow, AverageSnow, 'b', 'Snow', labelLocation='upper right
 PlotTrendLineOnly(YearPrecipitation, AveragePrecipitation, 'g', 'Precipitation', labelLocation='upper right')
 plot.savefig('SnowVsPrecipitation.png', bbox_inches='tight')
 
+# ----- Days Where Max Temp <= 32 Degegrees F. Per Year (Specific Location) ----
+TargetLocation = 'SALT LAKE TRIAD CENTER, UT US'
+FilteredDates, FilteredTemps = FilterDataForKeyValue(DataDaily['NAME'], DataDaily['DATE'], DataDaily['TMAX'], TargetLocation)
+ExtractedYears = GetYearsFromDates(FilteredDates)
+cleanedX, cleanedY = CleanDataFloat(ExtractedYears, FilteredTemps)
+filteredX, filteredY = FilterUnderEqualToValue(cleanedX, cleanedY, 32)
+YearCount, DayCount = CountForKey(filteredX, filteredY)
+print(GraphCounter()),
+plot.figure()
+plot.title('Days with Maximum Temperature <= 32 Degrees F.\n(All Locations)')
+plot.xlabel('Year')
+plot.ylabel('Number of Days')
+PlotWithTrendLine(YearCount, DayCount)
+plot.savefig('DaysUnder32-' + TargetLocation + '.png')
+
 # ----- Days Where Max Temp <= 32 Degegrees F. Per Year (All Locations) ----
 ExtractedYears = GetYearsFromDates(DataDaily['DATE'])
 cleanedX, cleanedY = CleanDataFloat(ExtractedYears, DataDaily['TMAX'])
@@ -287,7 +316,7 @@ plot.title('Days with Maximum Temperature <= 32 Degrees F.\n(All Locations)')
 plot.xlabel('Year')
 plot.ylabel('Number of Days')
 PlotWithTrendLine(YearCount, DayCount)
-plot.savefig('DaysUnder32.png')
+plot.savefig('DaysUnder32-AllLocations.png')
 
 #  ----- Final Messages ----- 
 print('Done!\nFinished plotting and exporting all graphs.\n')
