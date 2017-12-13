@@ -212,7 +212,7 @@ YearStartDay = 1
 GraphCount = 0
 
 print('Starting data file import and parsing. These may take a moment to process!\n\t1) Yearly Data ... '),
-FileNames = {'Daily':'WeatherData-SLC-RegionDailyWeather.csv', 'Yearly':'WinterData-YearlySummaries.csv'}
+FileNames = {'Daily':'WeatherData-SLC-Daily.csv', 'Yearly':'WeatherData-SLC-Yearly.csv'}
 DataYearly = OrganizeData(ReadDataFile(FileNames['Yearly']))
 print('Finished!\n\t2) Daily Data ... '),
 DataDaily = OrganizeData(ReadDataFile(FileNames['Daily']))
