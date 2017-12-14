@@ -46,5 +46,5 @@ General flow
 	
 Graphs desired
 	running average of first freeze
-	running average of last freeze
 	running average of snowfall
+	Snowfall vs Average Temperature

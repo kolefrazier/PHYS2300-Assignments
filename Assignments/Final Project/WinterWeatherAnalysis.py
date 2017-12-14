@@ -1,4 +1,31 @@
 #--------------------------------------------------------------------------------
+# G e n e r a l I n f o r m a t i o n
+#--------------------------------------------------------------------------------
+# Name: Final Projec t- Winter Weather Analysis
+#
+# Usage: python WinterWeatherAnalysis.py
+#
+# Description: Manages large datasets from the NOAA, using simple methods to generate
+#   various informational graphs.
+#
+# Inputs: N/A
+#
+# Outputs: Plots exported as PNG files.
+#
+# Auxiliary Files: Weather data CSV files:
+#   1) WeatherData-SLC-Daily.csv
+#   2) WeatherData-SLC-Yearly.csv
+#
+# Special Instructions: N/A
+#
+#--------------------------------------------------------------------------------
+# C o d e H i s t o r y
+#--------------------------------------------------------------------------------
+# Version: 1.0
+#
+# Author(s): Kole Frazier
+#
+#--------------------------------------------------------------------------------
 import csv
 import matplotlib
 import matplotlib.pylab as plot
@@ -207,8 +234,8 @@ def PlotTrendLineOnly(x, y, color='b', label='', labelLocation='upper left'):
 #   https://www1.ncdc.noaa.gov/pub/data/cdo/documentation/gsom-gsoy_documentation.pdf
 #
 #--------------------------------------------------------------------------------
-YearStartMonth = 8
-YearStartDay = 1
+#YearStartMonth = 8
+#YearStartDay = 1
 GraphCount = 0
 
 print('Starting data file import and parsing. These may take a moment to process!\n\t1) Yearly Data ... '),
@@ -299,7 +326,7 @@ filteredX, filteredY = FilterUnderEqualToValue(cleanedX, cleanedY, 32)
 YearCount, DayCount = CountForKey(filteredX)
 print(GraphCounter()),
 plot.figure()
-plot.title('Days with Maximum Temperature <= 32 Degrees F.\n(All Locations)')
+plot.title('Days with Maximum Temperature <= 32 Degrees F.\n(' + TargetLocation + ')')
 plot.xlabel('Year')
 plot.ylabel('Number of Days')
 PlotWithTrendLine(YearCount, DayCount)
