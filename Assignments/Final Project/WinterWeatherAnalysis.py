@@ -141,7 +141,7 @@ def FilterDataForKeyValue(Keys, Data1, Data2, Target):
 
 #Counts the number of values associated with each key.
 #   Useful for "Total per X" situations.
-def CountForKey(keys, data):
+def CountForKey(keys):
     #Setup lists that will be returned
     HandledKeys = []
     CountForKey = []
@@ -296,7 +296,7 @@ FilteredDates, FilteredTemps = FilterDataForKeyValue(DataDaily['NAME'], DataDail
 ExtractedYears = GetYearsFromDates(FilteredDates)
 cleanedX, cleanedY = CleanDataFloat(ExtractedYears, FilteredTemps)
 filteredX, filteredY = FilterUnderEqualToValue(cleanedX, cleanedY, 32)
-YearCount, DayCount = CountForKey(filteredX, filteredY)
+YearCount, DayCount = CountForKey(filteredX)
 print(GraphCounter()),
 plot.figure()
 plot.title('Days with Maximum Temperature <= 32 Degrees F.\n(All Locations)')
@@ -309,7 +309,7 @@ plot.savefig('DaysUnder32-' + TargetLocation + '.png')
 ExtractedYears = GetYearsFromDates(DataDaily['DATE'])
 cleanedX, cleanedY = CleanDataFloat(ExtractedYears, DataDaily['TMAX'])
 filteredX, filteredY = FilterUnderEqualToValue(cleanedX, cleanedY, 32)
-YearCount, DayCount = CountForKey(filteredX, filteredY)
+YearCount, DayCount = CountForKey(filteredX)
 print(GraphCounter()),
 plot.figure()
 plot.title('Days with Maximum Temperature <= 32 Degrees F.\n(All Locations)')
